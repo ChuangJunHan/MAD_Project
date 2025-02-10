@@ -13,7 +13,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 public class SignupActivity extends AppCompatActivity {
 
-    EditText signupName, signupEmail, signupPhone, signupPassword;
+    EditText signupUsername, signupEmail, signupPhone, signupPassword;
     TextView loginRedirectText;
     Button signupButton;
     FirebaseDatabase database;
@@ -24,7 +24,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        signupName = findViewById(R.id.signup_name);
+        signupUsername = findViewById(R.id.signup_name);
         signupEmail = findViewById(R.id.signup_email);
         signupPhone = findViewById(R.id.signup_phone);
         signupPassword = findViewById(R.id.signup_password);
@@ -39,13 +39,13 @@ public class SignupActivity extends AppCompatActivity {
                 database = FirebaseDatabase.getInstance();
                 reference = database.getReference("users");
 
-                String name = signupName.getText().toString();
+                String Username = signupUsername.getText().toString();
                 String email = signupEmail.getText().toString();
                 String phoneNumber = signupPhone.getText().toString();
                 String password = signupPassword.getText().toString();
 
-                HelperClass helperClass = new HelperClass(name, email,phoneNumber, password);
-                reference.child(name).setValue(helperClass);
+                HelperClass helperClass = new HelperClass(Username, email,phoneNumber, password);
+                reference.child(Username).setValue(helperClass);
 
                 Toast.makeText(SignupActivity.this, "You have successfully signed up!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);

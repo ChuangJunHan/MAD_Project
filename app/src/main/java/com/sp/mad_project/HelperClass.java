@@ -2,14 +2,14 @@ package com.sp.mad_project;
 
 public class HelperClass {
 
-    String name, email,phoneNumber,password;
+    String Username, email,phoneNumber,password;
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return Username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String Username) {
+        this.Username = Username;
     }
 
     public String getEmail() {
@@ -24,7 +24,7 @@ public class HelperClass {
         return phoneNumber;
     }
 
-    public void setUsername(String phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -36,10 +36,10 @@ public class HelperClass {
         this.password = password;
     }
 
-    public HelperClass(String name, String email, String username, String password) {
-        this.name = name;
+    public HelperClass(String Username, String email, String phoneNumber, String password) {
+        this.Username = Username;
         this.email = email;
-        this.phoneNumber = username;
+        this.phoneNumber = phoneNumber;
         this.password = password;
     }
 

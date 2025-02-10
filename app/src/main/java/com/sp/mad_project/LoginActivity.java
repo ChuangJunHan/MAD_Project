@@ -21,7 +21,7 @@ import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText loginEmail, loginPassword;
+    EditText loginEmail, loginPassword, loginUsername;
     Button loginButton;
     TextView signupRedirectText;
 
@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         loginEmail = findViewById(R.id.login_email);
+        loginUsername = findViewById(R.id.login_userName);
         loginPassword = findViewById(R.id.login_password);
         loginButton = findViewById(R.id.login_button);
         signupRedirectText = findViewById(R.id.signupRedirectText);
@@ -38,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!validateEmail() | !validatePassword()) {
+                if (!validateEmail() | !validatePassword() | !validateUsername()) {
 
                 } else {
                     checkUser();
@@ -56,10 +57,20 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    public Boolean validateUsername() {
+        String val = loginUsername.getText().toString();
+        if (val.isEmpty()) {
+            loginUsername.setError("Username cannot be empty");
+            return false;
+        } else {
+            loginUsername.setError(null);
+            return true;
+        }
+    }
     public Boolean validateEmail() {
         String val = loginEmail.getText().toString();
         if (val.isEmpty()) {
-            loginEmail.setError("Username cannot be empty");
+            loginEmail.setError("Email cannot be empty");
             return false;
         } else {
             loginEmail.setError(null);
@@ -80,11 +91,12 @@ public class LoginActivity extends AppCompatActivity {
 
 
     public void checkUser(){
+        String userUsername = loginUsername.getText().toString().trim();
         String userEmail = loginEmail.getText().toString().trim();
         String userPassword = loginPassword.getText().toString().trim();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
-        Query checkUserDatabase = reference.orderByChild("email").equalTo(userEmail);
+        Query checkUserDatabase = reference.orderByChild("username").equalTo(userUsername);
 
         checkUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -92,15 +104,15 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (snapshot.exists()){
 
-                    loginEmail.setError(null);
-                    String passwordFromDB = snapshot.child(userEmail).child("password").getValue(String.class);
+                    loginUsername.setError(null);
+                    String passwordFromDB = snapshot.child(userUsername).child("password").getValue(String.class);
 
                     if (passwordFromDB.equals(userPassword)) {
-                        loginEmail.setError(null);
+                        loginPassword.setError(null);
 
-                        String nameFromDB = snapshot.child(userEmail).child("name").getValue(String.class);
-                        String emailFromDB = snapshot.child(userEmail).child("email").getValue(String.class);
-                        String phoneFromDB = snapshot.child(userEmail).child("username").getValue(String.class);
+                        String nameFromDB = snapshot.child(userUsername).child("name").getValue(String.class);
+                        String emailFromDB = snapshot.child(userUsername).child("email").getValue(String.class);
+                        String phoneFromDB = snapshot.child(userUsername).child("phoneNumber").getValue(String.class);
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
@@ -115,8 +127,8 @@ public class LoginActivity extends AppCompatActivity {
                         loginPassword.requestFocus();
                     }
                 } else {
-                    loginEmail.setError("User does not exist");
-                    loginEmail.requestFocus();
+                    loginUsername.setError("User does not exist");
+                    loginUsername.requestFocus();
                 }
             }
 

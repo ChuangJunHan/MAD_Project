@@ -1,8 +1,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/background_gradient1">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="150dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="70dp"
+        android:text="Create Group"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="35dp"
+        android:text="Tell us more about your group"
+        android:textAlignment="center"
+        android:textColor="#FDFDFD"
+        android:textSize="20sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="40dp" />
 
     <EditText
         android:id="@+id/groupNameInput"
@@ -11,7 +44,15 @@
         android:hint="Group Name"
         android:inputType="textCapWords"
         android:padding="10dp"
-        android:textSize="16sp" />
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textSize="16sp"
+        android:background="@drawable/rounded_text"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="20dp" />
 
     <EditText
         android:id="@+id/groupDescriptionInput"
@@ -20,7 +61,15 @@
         android:hint="Group Description"
         android:inputType="textMultiLine"
         android:padding="10dp"
-        android:textSize="16sp" />
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textSize="16sp"
+        android:background="@drawable/rounded_text"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="20dp" />
 
     <EditText
         android:id="@+id/maxMembersInput"
@@ -29,13 +78,27 @@
         android:hint="Max Members"
         android:inputType="number"
         android:padding="10dp"
-        android:textSize="16sp" />
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textSize="16sp"
+        android:background="@drawable/rounded_text"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="20dp" />
 
     <Button
         android:id="@+id/createGroupButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Create Group"
+        android:backgroundTint="#D3D3D3"
+        android:background="@drawable/rounded_button"
+        android:minHeight="30dip"
+        android:padding="12dp"
+        android:text="Invite Members"
+        android:textColor="#000000"
         android:textSize="16sp"
-        android:padding="12dp" />
+        app:strokeColor="#D3D3D3" />
+
 </LinearLayout>

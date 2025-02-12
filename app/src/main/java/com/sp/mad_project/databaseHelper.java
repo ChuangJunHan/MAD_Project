@@ -12,7 +12,7 @@ import java.util.List;
 public class databaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "chat_groups.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     // Table names
     private static final String TABLE_GROUPS = "groups";
@@ -26,7 +26,8 @@ public class databaseHelper extends SQLiteOpenHelper {
 
     private static final String COLUMN_USER_ID = "id";
     private static final String COLUMN_USER_NAME = "username";
-    private static final String COLUMN_USER_PASSWORD = "password";
+    private static final String COLUMN_USER_PASSWORD = "password";\
+
     private static final String COLUMN_GROUP_ID = "id";
     private static final String COLUMN_GROUP_NAME = "name";
     private static final String COLUMN_GROUP_DESCRIPTION = "description";
@@ -80,7 +81,9 @@ public class databaseHelper extends SQLiteOpenHelper {
                 COLUMN_GROUP_NAME + " TEXT, " +
                 COLUMN_GROUP_DESCRIPTION + " TEXT, " +
                 COLUMN_MAX_MEMBERS + " INTEGER, " +
-                COLUMN_GROUP_KEY + " TEXT UNIQUE)";
+                COLUMN_GROUP_KEY + " TEXT UNIQUE)" +
+                ;
+
         db.execSQL(CREATE_GROUPS_TABLE);
 
         // Create tasks table

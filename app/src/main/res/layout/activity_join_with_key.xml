@@ -2,7 +2,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/background_gradient1">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="150dp" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="70dp"
+        android:text="Join Group"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="40sp" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="35dp"
+        android:text="Find your project teammates"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="75dp" />
 
     <EditText
         android:id="@+id/groupKeyInput"
@@ -11,7 +42,8 @@
         android:hint="Enter Group Key"
         android:inputType="text"
         android:padding="10dp"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:background="@drawable/rounded_text"/>
 
     <Button
         android:id="@+id/joinGroupButton"
@@ -20,5 +52,6 @@
         android:text="Join Group"
         android:textSize="16sp"
         android:padding="12dp"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_button"/>
 </LinearLayout>

@@ -4,41 +4,63 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
-public class membersAdapter extends ArrayAdapter<String> {
+public class membersAdapter extends RecyclerView.Adapter<membersAdapter.ViewHolder> {
 
-    private List<String> selectedMembers;
+    private final Context context;
+    private final List<String> availableUsers;
+    private final List<String> selectedMembers;
 
-    public membersAdapter(Context context, List<String> members, List<String> selectedMembers) {
-        super(context, 0, members);
+    public membersAdapter(Context context, List<String> availableUsers, List<String> selectedMembers) {
+        this.context = context;
+        this.availableUsers = availableUsers;
         this.selectedMembers = selectedMembers;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_member, parent, false);
-        }
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_member, parent, false);
+        return new ViewHolder(view);
+    }
 
-        String member = getItem(position);
-        TextView memberName = convertView.findViewById(R.id.memberName);
-        CheckBox checkBox = convertView.findViewById(R.id.memberCheckBox);
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        String user = availableUsers.get(position);
+        holder.memberName.setText(user);
 
-        memberName.setText(member);
-
-        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        // Handle checkbox state
+        holder.checkBox.setOnCheckedChangeListener(null);
+        holder.checkBox.setChecked(selectedMembers.contains(user));
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                selectedMembers.add(member);
+                selectedMembers.add(user);
             } else {
-                selectedMembers.remove(member);
+                selectedMembers.remove(user);
             }
         });
+    }
 
-        return convertView;
+    @Override
+    public int getItemCount() {
+        return availableUsers.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView memberName;
+        CheckBox checkBox;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            memberName = itemView.findViewById(R.id.memberName);
+            checkBox = itemView.findViewById(R.id.memberCheckBox);
+        }
     }
 }

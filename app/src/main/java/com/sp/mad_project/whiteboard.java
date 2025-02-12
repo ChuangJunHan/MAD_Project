@@ -17,7 +17,7 @@ public class whiteboard extends AppCompatActivity {
     private com.sp.mad_project.drawingView drawingView;
     private Button saveButton, clearButton, doneButton;
     private String groupName;
-    private chatDatabaseHelper dbHelper;
+    private databaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class whiteboard extends AppCompatActivity {
         clearButton = findViewById(R.id.btnClear);
         doneButton = findViewById(R.id.btnDone);
 
-        dbHelper = new chatDatabaseHelper(this);
+        dbHelper = new databaseHelper(this);
 
         // Get the group name from the intent
         groupName = getIntent().getStringExtra("groupName");

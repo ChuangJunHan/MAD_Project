@@ -25,11 +25,11 @@ public class chatMessages extends AppCompatActivity {
     private RecyclerView messagesRecyclerView;
     private EditText messageInput;
     private Button sendButton, optionsButton;
-    private String loggedInUser, groupName;
-    private chatDatabaseHelper dbHelper;
+    private String loggedInUser;
+    private int groupId;
+    private databaseHelper dbHelper;
     private List<Message> messages;
     private messageAdapter adapter;
-
     private String selectedDate;
 
     @Override
@@ -41,20 +41,26 @@ public class chatMessages extends AppCompatActivity {
         TextView groupNameTextView = findViewById(R.id.groupName);
 
         loggedInUser = getIntent().getStringExtra("loggedInUser");
-        groupName = getIntent().getStringExtra("groupName");
+        groupId = getIntent().getIntExtra("groupId", -1);
 
-        if (groupName != null) {
+        dbHelper = new databaseHelper(this);
+
+        if (groupId != -1) {
+            String groupName = dbHelper.getGroupNameById(groupId);
             groupNameTextView.setText(groupName);
+        } else {
+            Toast.makeText(this, "Invalid group information.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
 
-        dbHelper = new chatDatabaseHelper(this);
 
         messagesRecyclerView = findViewById(R.id.messagesRecyclerView);
         messageInput = findViewById(R.id.messageInput);
         sendButton = findViewById(R.id.sendButton);
         optionsButton = findViewById(R.id.optionsButton);
 
-        messages = dbHelper.getMessagesForGroup(groupName);
+        messages = dbHelper.getMessagesForGroupById(groupId);
         adapter = new messageAdapter(this, messages, loggedInUser);
         messagesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         messagesRecyclerView.setAdapter(adapter);
@@ -66,7 +72,7 @@ public class chatMessages extends AppCompatActivity {
                 return;
             }
 
-            dbHelper.addMessageToGroup(groupName, loggedInUser, messageText, "message");
+            dbHelper.addMessageToGroupById(groupId, loggedInUser, messageText, "message");
             messages.add(new Message(loggedInUser, messageText, "message"));
             adapter.notifyDataSetChanged();
             messagesRecyclerView.scrollToPosition(messages.size() - 1);
@@ -74,6 +80,14 @@ public class chatMessages extends AppCompatActivity {
         });
 
         optionsButton.setOnClickListener(v -> showOptionsDialog());
+
+        // Add click listener to the toolbar
+        toolbar.setOnClickListener(v -> {
+            Intent intent = new Intent(chatMessages.this, chatDetails.class);
+            intent.putExtra("loggedInUser", loggedInUser);
+            intent.putExtra("groupId", groupId);
+            startActivity(intent);
+        });
     }
 
     private void showOptionsDialog() {
@@ -131,7 +145,7 @@ public class chatMessages extends AppCompatActivity {
     private void saveEvent(String eventName, String eventDate) {
         String eventDetails = "Event: " + eventName + "\nDate: " + eventDate;
 
-        dbHelper.addMessageToGroup(groupName, "System", eventDetails, "event");
+        dbHelper.addMessageToGroupById(groupId, "System", eventDetails, "event");
         messages.add(new Message("System", eventDetails, "event"));
         adapter.notifyDataSetChanged();
         messagesRecyclerView.scrollToPosition(messages.size() - 1);
@@ -143,7 +157,8 @@ public class chatMessages extends AppCompatActivity {
 
     private void openWhiteboard() {
         Intent intent = new Intent(this, whiteboardGallery.class);
-        intent.putExtra("groupName", groupName); // Pass the group name to load its drawings
+        intent.putExtra("groupId", groupId);
+        intent.putExtra("previousPage", "chatMessages");
         startActivity(intent);
     }
 
@@ -154,7 +169,7 @@ public class chatMessages extends AppCompatActivity {
         if (requestCode == WHITEBOARD_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             String drawingPath = data.getStringExtra("drawingPath");
             if (drawingPath != null) {
-                dbHelper.addMessageToGroup(groupName, loggedInUser, drawingPath, "drawing");
+                dbHelper.addMessageToGroupById(groupId, loggedInUser, drawingPath, "drawing");
                 messages.add(new Message(loggedInUser, drawingPath, "drawing"));
                 adapter.notifyDataSetChanged();
                 messagesRecyclerView.scrollToPosition(messages.size() - 1);

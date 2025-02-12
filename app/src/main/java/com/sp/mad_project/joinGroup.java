@@ -30,7 +30,7 @@ public class joinGroup extends AppCompatActivity {
 
         if (loggedInUser == null || loggedInUser.isEmpty()) {
             // Redirect to login if no user is logged in
-            Intent intent = new Intent(joinGroup.this, LoginActivity.class);
+            Intent intent = new Intent(joinGroup.this, login.class);
             startActivity(intent);
             finish();
             return;

@@ -12,7 +12,7 @@ public class joinWithKey extends AppCompatActivity {
 
     private EditText groupKeyInput;
     private Button joinGroupButton;
-    private chatDatabaseHelper dbHelper;
+    private databaseHelper dbHelper;
     private String loggedInUser;
 
     @Override
@@ -23,14 +23,14 @@ public class joinWithKey extends AppCompatActivity {
         groupKeyInput = findViewById(R.id.groupKeyInput);
         joinGroupButton = findViewById(R.id.joinGroupButton);
 
-        dbHelper = new chatDatabaseHelper(this);
+        dbHelper = new databaseHelper(this);
 
         // Get logged-in user from intent
         loggedInUser = getIntent().getStringExtra("loggedInUser");
 
         if (loggedInUser == null || loggedInUser.isEmpty()) {
             Toast.makeText(this, "No user logged in. Redirecting to login...", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(joinWithKey.this, LoginActivity.class);
+            Intent intent = new Intent(joinWithKey.this, login.class);
             startActivity(intent);
             finish();
             return;

@@ -18,7 +18,7 @@ public class whiteboardGallery extends AppCompatActivity {
     private RecyclerView drawingsRecyclerView;
     private Button addDrawingButton;
     private String groupName;
-    private chatDatabaseHelper dbHelper;
+    private databaseHelper dbHelper;
     private List<Drawing> drawings;
     private drawingAdapter adapter;
 
@@ -30,7 +30,7 @@ public class whiteboardGallery extends AppCompatActivity {
         drawingsRecyclerView = findViewById(R.id.drawingsRecyclerView);
         addDrawingButton = findViewById(R.id.addDrawingButton);
 
-        dbHelper = new chatDatabaseHelper(this);
+        dbHelper = new databaseHelper(this);
 
         groupName = getIntent().getStringExtra("groupName");
         if (groupName == null) {

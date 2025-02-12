@@ -22,28 +22,32 @@
         <activity
             android:name=".notif"
             android:exported="false" />
+
         <activity
-            android:name=".SignupActivity"
+            android:name=".register"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".fakeLogin"
-            android:exported="true">
+            android:name=".login"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".LoginActivity"
+            android:name=".homePage"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".taskDetails"
             android:exported="false" />
+
+
         <activity
             android:name=".whiteboardGallery"
             android:exported="false" />
@@ -82,6 +86,15 @@
             android:exported="true" />
         <activity
             android:name=".whiteboard"
+            android:exported="false" />
+        <activity
+            android:name=".createTask"
+            android:exported="false" />
+        <activity
+            android:name=".taskGroups"
+            android:exported="false" />
+        <activity
+            android:name=".taskView"
             android:exported="false" />
     </application>
 

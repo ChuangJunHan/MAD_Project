@@ -26,7 +26,14 @@
         android:textAlignment="center"
         android:textColor="@android:color/black"        android:textSize="16sp"
         android:fontFamily="sans-serif"        android:letterSpacing="0.02" />
-    <!-- View Details Button -->
+
+    <TextView
+        android:id="@+id/taskMember"        android:layout_width="match_parent"
+        android:layout_height="wrap_content"        android:paddingBottom="12dp"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"        android:textSize="16sp"
+        android:fontFamily="sans-serif"        android:letterSpacing="0.02" />
+
     <Button        android:id="@+id/viewDetailsButton"
         android:layout_width="match_parent"        android:layout_height="48dp"
         android:layout_marginTop="12dp"        android:backgroundTint="?attr/colorPrimary"

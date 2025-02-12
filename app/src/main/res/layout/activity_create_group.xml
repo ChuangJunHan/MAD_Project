@@ -2,14 +2,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/bg_screen"
     android:padding="16dp">
 
     <EditText
         android:id="@+id/groupNameInput"
         android:layout_width="match_parent"
+        android:layout_marginTop="15dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/black_border"
         android:hint="Group Name"
         android:inputType="textCapWords"
+        android:layout_marginBottom="20dp"
         android:padding="10dp"
         android:textSize="16sp" />
 
@@ -17,7 +21,9 @@
         android:id="@+id/groupDescriptionInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/black_border"
         android:hint="Group Description"
+        android:layout_marginBottom="20dp"
         android:inputType="textMultiLine"
         android:padding="10dp"
         android:textSize="16sp" />
@@ -25,8 +31,10 @@
     <EditText
         android:id="@+id/maxMembersInput"
         android:layout_width="match_parent"
+        android:background="@drawable/black_border"
         android:layout_height="wrap_content"
         android:hint="Max Members"
+        android:layout_marginBottom="20dp"
         android:inputType="number"
         android:padding="10dp"
         android:textSize="16sp" />

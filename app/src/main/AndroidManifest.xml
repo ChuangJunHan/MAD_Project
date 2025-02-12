@@ -7,6 +7,7 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
@@ -46,7 +47,8 @@
         <activity
             android:name=".taskDetails"
             android:exported="false" />
-
+        <receiver android:name=".TaskNotificationReceiver"
+            android:exported="false"/>
 
         <activity
             android:name=".whiteboardGallery"

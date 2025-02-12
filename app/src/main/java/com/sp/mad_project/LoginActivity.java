@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Patterns;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -178,7 +178,7 @@ public class LoginActivity extends AppCompatActivity {
                         String emailFromDB = snapshot.child(userUsername).child("email").getValue(String.class);
                         String phoneFromDB = snapshot.child(userUsername).child("phoneNumber").getValue(String.class);
 
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, chatGroups.class);
 
                         intent.putExtra("name", nameFromDB);
                         intent.putExtra("email", emailFromDB);

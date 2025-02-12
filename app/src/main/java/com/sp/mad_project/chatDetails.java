@@ -17,7 +17,7 @@ public class chatDetails extends AppCompatActivity {
 
     private TextView groupNameText, groupDescriptionText, groupKeyText;
     private RecyclerView membersRecyclerView;
-    private Button inviteMembersButton, backButton;
+    private Button inviteMembersButton, backButton, ganttChartButton;
     private databaseHelper dbHelper;
     private int groupId;
     private String loggedInUser;
@@ -34,6 +34,7 @@ public class chatDetails extends AppCompatActivity {
         groupKeyText = findViewById(R.id.groupKeyText);
         membersRecyclerView = findViewById(R.id.membersRecyclerView);
         inviteMembersButton = findViewById(R.id.inviteMembersButton);
+        ganttChartButton = findViewById(R.id.ganttChartButton);
         backButton = findViewById(R.id.backButton);
 
         dbHelper = new databaseHelper(this);
@@ -65,6 +66,14 @@ public class chatDetails extends AppCompatActivity {
         // Invite Members Button
         inviteMembersButton.setOnClickListener(v -> {
             Intent intent = new Intent(chatDetails.this, inviteMembers.class);
+            intent.putExtra("groupId", groupId);
+            intent.putExtra("loggedInUser", loggedInUser);
+            startActivity(intent);
+        });
+
+        // Invite Members Button
+        ganttChartButton.setOnClickListener(v -> {
+            Intent intent = new Intent(chatDetails.this, ganttChart.class);
             intent.putExtra("groupId", groupId);
             intent.putExtra("loggedInUser", loggedInUser);
             startActivity(intent);

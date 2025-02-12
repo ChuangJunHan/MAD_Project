@@ -15,8 +15,8 @@ import java.io.IOException;
 public class whiteboard extends AppCompatActivity {
 
     private com.sp.mad_project.drawingView drawingView;
-    private Button saveButton, clearButton, doneButton;
-    private String groupName;
+    private Button clearButton, doneButton;
+    private int groupId;
     private databaseHelper dbHelper;
 
     @Override
@@ -25,15 +25,14 @@ public class whiteboard extends AppCompatActivity {
         setContentView(R.layout.activity_whiteboard);
 
         drawingView = findViewById(R.id.drawingView);
-        saveButton = findViewById(R.id.btnSave);
         clearButton = findViewById(R.id.btnClear);
         doneButton = findViewById(R.id.btnDone);
 
         dbHelper = new databaseHelper(this);
 
-        // Get the group name from the intent
-        groupName = getIntent().getStringExtra("groupName");
-        if (groupName == null) {
+        // Get the groupId from the intent
+        groupId = getIntent().getIntExtra("groupId", -1);
+        if (groupId == -1) {
             Toast.makeText(this, "Group not specified", Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -41,18 +40,9 @@ public class whiteboard extends AppCompatActivity {
 
         clearButton.setOnClickListener(v -> drawingView.clearCanvas());
 
-        saveButton.setOnClickListener(v -> {
-            try {
-                String filePath = saveDrawing(groupName);
-                Toast.makeText(this, "Drawing saved to " + filePath, Toast.LENGTH_SHORT).show();
-            } catch (IOException e) {
-                Toast.makeText(this, "Error saving drawing", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         doneButton.setOnClickListener(v -> {
             try {
-                String filePath = saveDrawing(groupName);
+                String filePath = saveDrawing(groupId);
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("drawingPath", filePath);
                 setResult(RESULT_OK, resultIntent);
@@ -63,12 +53,12 @@ public class whiteboard extends AppCompatActivity {
         });
     }
 
-    private String saveDrawing(String groupName) throws IOException {
+    private String saveDrawing(int groupId) throws IOException {
         // Convert the drawing to a bitmap
         Bitmap bitmap = drawingView.getBitmap();
 
         // Create a directory for the group if it doesn't exist
-        File groupDir = new File(getExternalFilesDir(null), groupName);
+        File groupDir = new File(getExternalFilesDir(null), "group_" + groupId);
         if (!groupDir.exists()) groupDir.mkdirs();
 
         // Save the bitmap to a file
@@ -78,7 +68,7 @@ public class whiteboard extends AppCompatActivity {
         }
 
         // Save the drawing details in the database
-        dbHelper.addDrawingToGroup(groupName, file.getAbsolutePath());
+        dbHelper.addDrawingToGroup(groupId, file.getAbsolutePath());
         return file.getAbsolutePath();
     }
 }

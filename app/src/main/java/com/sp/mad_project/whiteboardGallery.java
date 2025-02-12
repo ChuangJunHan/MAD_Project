@@ -17,7 +17,7 @@ public class whiteboardGallery extends AppCompatActivity {
 
     private RecyclerView drawingsRecyclerView;
     private Button addDrawingButton;
-    private String groupName;
+    private int groupId;
     private databaseHelper dbHelper;
     private List<Drawing> drawings;
     private drawingAdapter adapter;
@@ -32,8 +32,8 @@ public class whiteboardGallery extends AppCompatActivity {
 
         dbHelper = new databaseHelper(this);
 
-        groupName = getIntent().getStringExtra("groupName");
-        if (groupName == null) {
+        groupId = getIntent().getIntExtra("groupId", -1);
+        if (groupId == -1) {
             Toast.makeText(this, "Group not specified", Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -43,14 +43,14 @@ public class whiteboardGallery extends AppCompatActivity {
 
         addDrawingButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, whiteboard.class);
-            intent.putExtra("groupName", groupName); // Pass group name for saving the drawing
+            intent.putExtra("groupId", groupId); // Pass groupId for saving the drawing
             startActivityForResult(intent, WHITEBOARD_REQUEST_CODE);
         });
     }
 
     private void loadDrawings() {
         // Load drawings for the specific group
-        drawings = dbHelper.getDrawingsForGroup(groupName);
+        drawings = dbHelper.getDrawingsForGroup(groupId);
 
         // Set up the RecyclerView
         adapter = new drawingAdapter(this, drawings);

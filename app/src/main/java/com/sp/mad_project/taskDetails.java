@@ -49,7 +49,7 @@ public class taskDetails extends AppCompatActivity {
 
         // Database setup
         dbHelper = new databaseHelper(this);
-        taskId = getIntent().getIntExtra("TASK_ID", -1);
+        taskId = getIntent().getIntExtra("taskId", -1);
         groupId = getIntent().getIntExtra("groupId", -1);
 
         // Load project members and populate dropdown
@@ -65,7 +65,7 @@ public class taskDetails extends AppCompatActivity {
                     (view, year, month, dayOfMonth) -> {
                         String selectedDate = dayOfMonth + "-" + (month + 1) + "-" + year;
                         deadlineInput.setText(selectedDate);
-                    }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), Calendar.DAY_OF_MONTH);
+                    }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
             datePickerDialog.show();
         });
 

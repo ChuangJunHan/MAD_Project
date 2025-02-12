@@ -321,12 +321,14 @@ public class databaseHelper extends SQLiteOpenHelper {
             String deadline = cursor.getString(cursor.getColumnIndexOrThrow("deadline"));
             int progress = cursor.getInt(cursor.getColumnIndexOrThrow("progress"));
             String assignedMember = cursor.getString(cursor.getColumnIndexOrThrow("assigned_member"));
+            int groupId = cursor.getInt(cursor.getColumnIndexOrThrow("group_id")); // Include groupId
             cursor.close();
-            return new Task(id, name, deadline, progress, assignedMember);
+            return new Task(id, name, deadline, progress, assignedMember, groupId); // Pass groupId
         }
         cursor.close();
         return null;
     }
+
 
     // Get todos by task ID
     public List<String> getTodosByTask(int taskId) {
@@ -454,7 +456,7 @@ public class databaseHelper extends SQLiteOpenHelper {
                 String deadline = cursor.getString(cursor.getColumnIndexOrThrow("deadline"));
                 int progress = cursor.getInt(cursor.getColumnIndexOrThrow("progress"));
                 String assignedMember = cursor.getString(cursor.getColumnIndexOrThrow("assigned_member"));
-                tasks.add(new Task(id, name, deadline, progress, assignedMember));
+                tasks.add(new Task(id, name, deadline, progress, assignedMember, groupId));
             } while (cursor.moveToNext());
         }
 

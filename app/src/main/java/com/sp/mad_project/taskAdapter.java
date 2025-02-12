@@ -38,6 +38,7 @@ public class taskAdapter extends RecyclerView.Adapter<taskAdapter.TaskViewHolder
         holder.viewDetailsButton.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), taskDetails.class);
             intent.putExtra("taskId", task.getId()); // Pass the task ID to the details activity
+            intent.putExtra("groupId", task.getGroupId());
             v.getContext().startActivity(intent);
         });
     }

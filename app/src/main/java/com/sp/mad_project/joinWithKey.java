@@ -12,7 +12,7 @@ public class joinWithKey extends AppCompatActivity {
 
     private EditText groupKeyInput;
     private Button joinGroupButton;
-    private chatDatabaseHelper dbHelper;
+    private databaseHelper dbHelper;
     private String loggedInUser;
 
     @Override
@@ -23,7 +23,7 @@ public class joinWithKey extends AppCompatActivity {
         groupKeyInput = findViewById(R.id.groupKeyInput);
         joinGroupButton = findViewById(R.id.joinGroupButton);
 
-        dbHelper = new chatDatabaseHelper(this);
+        dbHelper = new databaseHelper(this);
 
         // Get logged-in user from intent
         loggedInUser = getIntent().getStringExtra("loggedInUser");

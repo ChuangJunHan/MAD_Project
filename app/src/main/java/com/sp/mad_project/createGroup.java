@@ -13,7 +13,7 @@ public class createGroup extends AppCompatActivity {
     private EditText groupNameInput, groupDescriptionInput, maxMembersInput;
     private Button createGroupButton;
     private String loggedInUser;
-    private chatDatabaseHelper dbHelper;
+    private databaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class createGroup extends AppCompatActivity {
         maxMembersInput = findViewById(R.id.maxMembersInput);
         createGroupButton = findViewById(R.id.createGroupButton);
 
-        dbHelper = new chatDatabaseHelper(this);
+        dbHelper = new databaseHelper(this);
 
         // Get the logged-in user from the intent
         loggedInUser = getIntent().getStringExtra("loggedInUser");
@@ -40,20 +40,32 @@ public class createGroup extends AppCompatActivity {
                 return;
             }
 
-            int maxMembers = Integer.parseInt(maxMembersText);
+            int maxMembers;
+            try {
+                maxMembers = Integer.parseInt(maxMembersText);
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Max members must be a number.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             // Create the group in the database
             long groupId = dbHelper.addGroup(groupName, groupDescription, maxMembers);
 
             if (groupId != -1) {
-                Toast.makeText(this, "Group created successfully!", Toast.LENGTH_SHORT).show();
+                // Automatically add the logged-in user to the group
+                boolean isUserAdded = dbHelper.addMemberToGroup(groupId, loggedInUser);
+                if (isUserAdded) {
+                    Toast.makeText(this, "Group created and you have been added as a member!", Toast.LENGTH_SHORT).show();
 
-                // Redirect to inviteMembers page
-                Intent intent = new Intent(createGroup.this, inviteMembers.class);
-                intent.putExtra("groupName", groupName);
-                intent.putExtra("loggedInUser", loggedInUser);
-                startActivity(intent);
-                finish();
+                    // Redirect to inviteMembers page
+                    Intent intent = new Intent(createGroup.this, inviteMembers.class);
+                    intent.putExtra("groupId", groupId);
+                    intent.putExtra("loggedInUser", loggedInUser);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(this, "Failed to add the current user to the group. Try again.", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(this, "Failed to create group. Try again.", Toast.LENGTH_SHORT).show();
             }

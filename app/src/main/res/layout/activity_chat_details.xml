@@ -1,64 +1,59 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- Group Name -->
     <TextView
         android:id="@+id/groupNameText"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Group Name"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:paddingBottom="8dp" />
+        android:layout_marginBottom="8dp" />
 
+    <!-- Group Description -->
     <TextView
         android:id="@+id/groupDescriptionText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Group Description"
         android:textSize="16sp"
-        android:paddingBottom="8dp" />
+        android:layout_marginBottom="8dp" />
 
+    <!-- Group Key -->
     <TextView
         android:id="@+id/groupKeyText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Group Key"
-        android:textSize="16sp"
-        android:paddingBottom="16dp"
-        android:textStyle="italic" />
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginBottom="16dp" />
 
-    <TextView
+    <!-- Members List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/membersRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Members"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:paddingBottom="8dp" />
+        android:layout_marginBottom="16dp" />
 
-    <ListView
-        android:id="@+id/membersListView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp" />
-
-    <Button
-        android:id="@+id/inviteMembersButton"
+    <!-- Buttons -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Invite Members"
-        android:textSize="16sp"
-        android:padding="12dp" />
+        android:orientation="horizontal" >
 
-    <Button
-        android:id="@+id/backToChatButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Back to Chat"
-        android:textSize="16sp"
-        android:padding="12dp" />
+        <Button
+            android:id="@+id/inviteMembersButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Invite Members" />
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back to Home" />
+    </LinearLayout>
 </LinearLayout>

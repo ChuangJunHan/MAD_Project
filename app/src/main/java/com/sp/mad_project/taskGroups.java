@@ -12,13 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class chatGroups extends AppCompatActivity {
+public class taskGroups extends AppCompatActivity {
 
     private ListView groupListView;
     private Button addGroupButton, logoutButton;
     private ArrayAdapter<String> adapter;
     private databaseHelper dbHelper;
-    private List<Group> groups; // List of Group objects
+    private List<Group> groups; // Use a Group class to store group details (name and ID)
     private String loggedInUser;
 
     @Override
@@ -37,7 +37,7 @@ public class chatGroups extends AppCompatActivity {
 
         if (loggedInUser == null || loggedInUser.isEmpty()) {
             Toast.makeText(this, "No user logged in. Redirecting to login...", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(chatGroups.this, login.class);
+            Intent intent = new Intent(taskGroups.this, login.class);
             startActivity(intent);
             finish();
             return;
@@ -48,14 +48,15 @@ public class chatGroups extends AppCompatActivity {
 
         // Handle "Add Group" button click
         addGroupButton.setOnClickListener(v -> {
-            Intent intent = new Intent(chatGroups.this, createGroup.class);
+            Intent intent = new Intent(taskGroups.this, createGroup.class);
             intent.putExtra("loggedInUser", loggedInUser);
+            intent.putExtra("previousPage", "taskGroups");
             startActivity(intent);
         });
 
         // Handle logout
         logoutButton.setOnClickListener(v -> {
-            Intent intent = new Intent(chatGroups.this, login.class);
+            Intent intent = new Intent(taskGroups.this, login.class);
             startActivity(intent);
             finish();
         });
@@ -64,15 +65,16 @@ public class chatGroups extends AppCompatActivity {
         groupListView.setOnItemClickListener((parent, view, position, id) -> {
             Group selectedGroup = groups.get(position);
 
-            Intent intent = new Intent(chatGroups.this, chatMessages.class);
-            intent.putExtra("groupId", selectedGroup.getId()); // Pass groupId
+            Intent intent = new Intent(taskGroups.this, taskView.class);
+            intent.putExtra("groupId", selectedGroup.getId()); // Pass group ID instead of name
             intent.putExtra("loggedInUser", loggedInUser);
+            intent.putExtra("previousPage", "taskGroups");
             startActivity(intent);
         });
     }
 
     private void loadUserGroups() {
-        groups = dbHelper.getGroupsWithIdsForUser(loggedInUser);
+        groups = dbHelper.getGroupsWithIdsForUser(loggedInUser); // Fetch groups with IDs
 
         if (groups.isEmpty()) {
             Toast.makeText(this, "You are not a member of any groups", Toast.LENGTH_SHORT).show();
@@ -91,6 +93,7 @@ public class chatGroups extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // Refresh the groups list when the activity is resumed
         loadUserGroups();
     }
 }

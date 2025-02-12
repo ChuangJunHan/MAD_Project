@@ -1,50 +1,23 @@
 package com.sp.mad_project;
 
-import androidx.activity.result.IntentSenderRequest;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.IntentSender;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.imageview.ShapeableImageView;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.AuthCredential;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
 
-import java.util.Objects;
-
-import com.google.firebase.Firebase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,16 +25,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Objects;
-
 public class LoginActivity extends AppCompatActivity {
 
     EditText loginEmail, loginPassword, loginUsername;
-
+    private FirebaseAuth auth;
 
     Button loginButton;
     TextView signupRedirectText;
-
 
 
     @Override
@@ -69,16 +39,23 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //Gets the EditText/Button inputs
         loginEmail = findViewById(R.id.login_email);
         loginUsername = findViewById(R.id.login_userName);
         loginPassword = findViewById(R.id.login_password);
         loginButton = findViewById(R.id.login_button);
+
+        //Redirect texts as an transition
         signupRedirectText = findViewById(R.id.signupRedirectText);
 
+        //Firebase Authentication
+        auth = FirebaseAuth.getInstance();
 
+        //Event Listener for login button to handle all user logic and data
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (!validateEmail() | !validatePassword() | !validateUsername()) {
 
                 } else {
@@ -86,6 +63,49 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+                /*Gets the password and email from the login inputs
+                String pass = loginPassword.getText().toString().trim();
+                String email = loginEmail.getText().toString().trim();
+
+
+
+                //Checks if email input is empty and matches the correct email input
+                if (!email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+
+                    //Checks if password input is empty
+                 if(!pass.isEmpty()) {
+
+                     checkUser();
+                     auth.signInWithEmailAndPassword(email, pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        //When login is successful, the toast displays a message and brings us to the main activity.
+                         @Override
+                        public void onSuccess(AuthResult authResult) {
+
+                            Toast.makeText(LoginActivity.this, "Login Successfully!!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+                            startActivity(intent);
+                            finish();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() { //To handle failure of login
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(LoginActivity.this, "Login Failed :( ", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    } else {
+                     loginPassword.setError("Password cannot be empty");
+                        }
+                } else if(email.isEmpty()) {
+                    loginEmail.setError("Email cannot be empty");
+                } else {
+                    loginEmail.setError("Please enter valid email");
+                }
+
+            }
+
+        });*/
 
         signupRedirectText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,9 +117,10 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+     //Checks if the Username input field is empty
     public Boolean validateUsername() {
-        String val = loginUsername.getText().toString();
-        if (val.isEmpty()) {
+        String username = loginUsername.getText().toString();
+        if (username.isEmpty()) {
             loginUsername.setError("Username cannot be empty");
             return false;
         } else {
@@ -107,9 +128,11 @@ public class LoginActivity extends AppCompatActivity {
             return true;
         }
     }
+
+    //Checks if the email input field is empty
     public Boolean validateEmail() {
-        String val = loginEmail.getText().toString();
-        if (val.isEmpty()) {
+        String email = loginEmail.getText().toString();
+        if (email.isEmpty()) {
             loginEmail.setError("Email cannot be empty");
             return false;
         } else {
@@ -118,9 +141,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    //Checks if the password input field is empty
     public Boolean validatePassword(){
-        String val = loginPassword.getText().toString();
-        if (val.isEmpty()) {
+        String password = loginPassword.getText().toString();
+        if (password.isEmpty()) {
             loginPassword.setError("Password cannot be empty");
             return false;
         } else {
@@ -129,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
+    // Function to check if user data is in DB
     public void checkUser(){
         String userUsername = loginUsername.getText().toString().trim();
         String userEmail = loginEmail.getText().toString().trim();
@@ -162,6 +186,8 @@ public class LoginActivity extends AppCompatActivity {
                         intent.putExtra("password", passwordFromDB);
 
                         startActivity(intent);
+
+
                     } else {
                         loginPassword.setError("Invalid Credentials");
                         loginPassword.requestFocus();

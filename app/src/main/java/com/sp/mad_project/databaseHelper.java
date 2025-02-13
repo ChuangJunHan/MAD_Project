@@ -437,28 +437,6 @@ public class databaseHelper extends SQLiteOpenHelper {
         return users;
     }
 
-    public List<Group> getGroupsWithIdsForUser(String username) {
-        List<Group> groups = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String query = "SELECT g.id, g.name FROM groups g " +
-                "JOIN group_members gm ON g.id = gm.group_id " +
-                "WHERE gm.member_name = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{username});
-
-        if (cursor.moveToFirst()) {
-            do {
-                int groupId = cursor.getInt(0);
-                String groupName = cursor.getString(1);
-                groups.add(new Group(groupId, groupName));
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
-        return groups;
-    }
-
     public List<Task> getTasksByGroupId(int groupId) {
         List<Task> tasks = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -633,4 +611,53 @@ public class databaseHelper extends SQLiteOpenHelper {
         return events;
     }
 
+    public List<Group> getGroupsWithEventCounts(String username) {
+        List<Group> groups = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT g.id, g.name, " +
+                "(SELECT COUNT(*) FROM messages m WHERE m.group_id = g.id) AS event_count " +
+                "FROM groups g " +
+                "JOIN group_members gm ON g.id = gm.group_id " +
+                "WHERE gm.member_name = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{username});
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String name = cursor.getString(1);
+                int eventCount = cursor.getInt(2);
+
+                groups.add(new Group(id, name, eventCount, 0)); // No task count for chat groups
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return groups;
+    }
+
+    public List<Group> getGroupsWithTaskCounts(String username) {
+        List<Group> groups = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT g.id, g.name, " +
+                "(SELECT COUNT(*) FROM tasks t WHERE t.group_id = g.id) AS task_count " +
+                "FROM groups g " +
+                "JOIN group_members gm ON g.id = gm.group_id " +
+                "WHERE gm.member_name = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{username});
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String name = cursor.getString(1);
+                int taskCount = cursor.getInt(2);
+
+                groups.add(new Group(id, name, 0, taskCount)); // No event count for task groups
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return groups;
+    }
 }

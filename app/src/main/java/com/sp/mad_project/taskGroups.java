@@ -2,23 +2,20 @@ package com.sp.mad_project;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class taskGroups extends AppCompatActivity {
 
-    private ListView groupListView;
+    private RecyclerView groupsRecyclerView;
     private Button addGroupButton, logoutButton;
-    private ArrayAdapter<String> adapter;
     private databaseHelper dbHelper;
-    private List<Group> groups; // Use a Group class to store group details (name and ID)
     private String loggedInUser;
 
     @Override
@@ -26,7 +23,8 @@ public class taskGroups extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_groups);
 
-        groupListView = findViewById(R.id.groupListView);
+        groupsRecyclerView = findViewById(R.id.groupsRecyclerView);
+        groupsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         addGroupButton = findViewById(R.id.addGroupButton);
         logoutButton = findViewById(R.id.logoutButton);
 
@@ -44,7 +42,7 @@ public class taskGroups extends AppCompatActivity {
         }
 
         // Fetch and display groups for the logged-in user
-        loadUserGroups();
+        loadTaskGroups();
 
         // Handle "Add Group" button click
         addGroupButton.setOnClickListener(v -> {
@@ -60,40 +58,23 @@ public class taskGroups extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-
-        // Handle group selection
-        groupListView.setOnItemClickListener((parent, view, position, id) -> {
-            Group selectedGroup = groups.get(position);
-
-            Intent intent = new Intent(taskGroups.this, taskView.class);
-            intent.putExtra("groupId", selectedGroup.getId()); // Pass group ID instead of name
-            intent.putExtra("loggedInUser", loggedInUser);
-            intent.putExtra("previousPage", "taskGroups");
-            startActivity(intent);
-        });
     }
 
-    private void loadUserGroups() {
-        groups = dbHelper.getGroupsWithIdsForUser(loggedInUser); // Fetch groups with IDs
+    private void loadTaskGroups() {
+        List<Group> taskGroups = dbHelper.getGroupsWithTaskCounts(loggedInUser);
 
-        if (groups.isEmpty()) {
-            Toast.makeText(this, "You are not a member of any groups", Toast.LENGTH_SHORT).show();
+        if (taskGroups.isEmpty()) {
+            Toast.makeText(this, "No task groups found.", Toast.LENGTH_SHORT).show();
         }
 
-        // Extract group names for display
-        List<String> groupNames = new ArrayList<>();
-        for (Group group : groups) {
-            groupNames.add(group.getName());
-        }
-
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupNames);
-        groupListView.setAdapter(adapter);
+        groupAdapter adapter = new groupAdapter(this, taskGroups, false);
+        groupsRecyclerView.setAdapter(adapter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         // Refresh the groups list when the activity is resumed
-        loadUserGroups();
+        loadTaskGroups();
     }
 }

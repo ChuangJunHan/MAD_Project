@@ -8,17 +8,17 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class chatGroups extends AppCompatActivity {
 
-    private ListView groupListView;
+    private RecyclerView groupsRecyclerView;
     private Button addGroupButton, logoutButton;
-    private ArrayAdapter<String> adapter;
     private databaseHelper dbHelper;
-    private List<Group> groups; // List of Group objects
     private String loggedInUser;
 
     @Override
@@ -26,7 +26,8 @@ public class chatGroups extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_groups);
 
-        groupListView = findViewById(R.id.groupListView);
+        groupsRecyclerView = findViewById(R.id.groupsRecyclerView);
+        groupsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         addGroupButton = findViewById(R.id.addGroupButton);
         logoutButton = findViewById(R.id.logoutButton);
 
@@ -44,7 +45,7 @@ public class chatGroups extends AppCompatActivity {
         }
 
         // Fetch and display groups for the logged-in user
-        loadUserGroups();
+        loadChatGroups();
 
         // Handle "Add Group" button click
         addGroupButton.setOnClickListener(v -> {
@@ -59,38 +60,22 @@ public class chatGroups extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-
-        // Handle group selection
-        groupListView.setOnItemClickListener((parent, view, position, id) -> {
-            Group selectedGroup = groups.get(position);
-
-            Intent intent = new Intent(chatGroups.this, chatMessages.class);
-            intent.putExtra("groupId", selectedGroup.getId()); // Pass groupId
-            intent.putExtra("loggedInUser", loggedInUser);
-            startActivity(intent);
-        });
     }
 
-    private void loadUserGroups() {
-        groups = dbHelper.getGroupsWithIdsForUser(loggedInUser);
+    private void loadChatGroups() {
+        List<Group> chatGroups = dbHelper.getGroupsWithEventCounts(loggedInUser);
 
-        if (groups.isEmpty()) {
-            Toast.makeText(this, "You are not a member of any groups", Toast.LENGTH_SHORT).show();
+        if (chatGroups.isEmpty()) {
+            Toast.makeText(this, "No chat groups found.", Toast.LENGTH_SHORT).show();
         }
 
-        // Extract group names for display
-        List<String> groupNames = new ArrayList<>();
-        for (Group group : groups) {
-            groupNames.add(group.getName());
-        }
-
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupNames);
-        groupListView.setAdapter(adapter);
+        groupAdapter adapter = new groupAdapter(this, chatGroups, true);
+        groupsRecyclerView.setAdapter(adapter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadUserGroups();
+        loadChatGroups();
     }
 }

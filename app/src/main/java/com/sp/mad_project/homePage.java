@@ -47,5 +47,13 @@ public class homePage extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
+        // In your dashboard or main activity
+        Button notificationsButton = findViewById(R.id.notificationsButton);
+        notificationsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(homePage.this, notifications.class);
+            intent.putExtra("loggedInUser", loggedInUser); // Pass the logged-in user
+            startActivity(intent);
+        });
     }
 }

@@ -570,4 +570,67 @@ public class databaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return null; // No data found
     }
+
+    // Fetch all tasks assigned to the current user
+    public List<Task> getTasksForUser(String username) {
+        List<Task> tasks = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM tasks WHERE assigned_member = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{username});
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                String deadline = cursor.getString(cursor.getColumnIndexOrThrow("deadline"));
+                int progress = cursor.getInt(cursor.getColumnIndexOrThrow("progress"));
+                int groupId = cursor.getInt(cursor.getColumnIndexOrThrow("group_id"));
+
+                tasks.add(new Task(id, name, deadline, progress, username, groupId));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return tasks;
+    }
+
+
+    public List<Message> getEventsForUserGroups(String username) {
+        List<Message> events = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Query to get group IDs the user is part of
+        String groupQuery = "SELECT group_id FROM group_members WHERE member_name = ?";
+        Cursor groupCursor = db.rawQuery(groupQuery, new String[]{username});
+
+        List<String> groupIds = new ArrayList<>();
+        while (groupCursor.moveToNext()) {
+            groupIds.add(groupCursor.getString(0));
+        }
+        groupCursor.close();
+
+        if (groupIds.isEmpty()) {
+            return events; // No groups, no events
+        }
+
+        // Query to get events for those groups
+        String eventQuery = "SELECT * FROM messages WHERE type = 'event' AND group_id IN (" +
+                new String(new char[groupIds.size() - 1]).replace("\0", "?,") + "?)";
+        Cursor eventCursor = db.rawQuery(eventQuery, groupIds.toArray(new String[0]));
+
+        if (eventCursor.moveToFirst()) {
+            do {
+                int id = eventCursor.getInt(eventCursor.getColumnIndexOrThrow("id"));
+                String sender = eventCursor.getString(eventCursor.getColumnIndexOrThrow("sender"));
+                String content = eventCursor.getString(eventCursor.getColumnIndexOrThrow("message"));
+
+                events.add(new Message(sender, content, "event"));
+            } while (eventCursor.moveToNext());
+        }
+
+        eventCursor.close();
+        return events;
+    }
+
 }

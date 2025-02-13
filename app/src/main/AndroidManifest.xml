@@ -21,24 +21,20 @@
         android:theme="@style/Theme.MAD_Project"
         tools:targetApi="31">
         <activity
-            android:name=".notif"
+            android:name=".joinGroup"
+            android:exported="false" />
+        <activity
+            android:name=".notifications"
             android:exported="false" />
 
         <activity
             android:name=".register"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="false">
         </activity>
 
         <activity
             android:name=".login"
             android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
 
         <activity
@@ -47,6 +43,7 @@
         <activity
             android:name=".taskDetails"
             android:exported="false" />
+
         <receiver android:name=".TaskNotificationReceiver"
             android:exported="false"/>
 
@@ -76,7 +73,13 @@
             android:exported="true" />
         <activity
             android:name=".splashScreen"
-            android:exported="true" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".whiteboard"
             android:exported="false" />
@@ -91,6 +94,9 @@
             android:exported="false" />
         <activity
             android:name=".ganttChart"
+            android:exported="false" />
+        <activity
+            android:name=".joinWithQr"
             android:exported="false" />
     </application>
 

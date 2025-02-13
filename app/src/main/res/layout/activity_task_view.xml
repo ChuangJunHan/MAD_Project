@@ -1,26 +1,3 @@
-<<<<<<< HEAD
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_screen"
-    android:orientation="vertical">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:theme="?attr/actionBarTheme"
-        android:minHeight="?attr/actionBarSize">
-
-        <TextView
-            android:id="@+id/groupName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Group Name"
-            android:textSize="18sp"
-            android:textColor="@android:color/white" />
-=======
 <LinearLayout    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"    android:layout_height="match_parent"
     android:orientation="vertical"    android:background="@drawable/background_gradient">
@@ -35,7 +12,6 @@
             android:fontFamily="sans-serif-medium"            android:text="Group Name"
             android:textAlignment="viewStart"            android:textColor="@android:color/white"
             android:textSize="20sp"            android:textStyle="bold" />
->>>>>>> bcb6cb2663d7ed07faae5763f7258f240daa9e85
     </androidx.appcompat.widget.Toolbar>
     <!-- RecyclerView for Task List -->    <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/tasksRecyclerView"        android:layout_width="match_parent"

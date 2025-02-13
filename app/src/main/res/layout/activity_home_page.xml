@@ -1,15 +1,12 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/background_gradient">
 
-
     <!-- User Display -->
     <TextView
-
         android:id="@+id/userDisplayTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,7 +14,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_gravity="center"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp" />
 
     <!-- Content Section -->
@@ -62,7 +59,6 @@
         android:background="@android:color/transparent"
         android:padding="12dp" >
 
-
         <Button
             android:id="@+id/chatGroupsButton"
             android:layout_width="wrap_content"
@@ -81,13 +77,10 @@
             android:id="@+id/taskGroupsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="45dp"
-            android:layout_marginRight="45dp"
-            android:background="@android:color/holo_blue_dark"
             android:text="Tasks"
-            android:textColor="@android:color/white"
             android:textSize="14sp"
-            app:cornerRadius="50dp" />
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_blue_dark" />
 
         <Space
             android:layout_width="wrap_content"
@@ -99,6 +92,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Home"
+            android:textSize="14sp"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_blue_dark" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/notificationsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notif"
             android:textSize="14sp"
             android:textColor="@android:color/white"
             android:background="@android:color/holo_blue_dark" />

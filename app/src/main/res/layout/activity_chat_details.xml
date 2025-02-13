@@ -6,6 +6,7 @@
     android:padding="16dp"
     android:background="@drawable/background_gradient">
 
+
     <!-- Group Name -->
     <TextView
         android:id="@+id/groupNameText"
@@ -13,7 +14,6 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/black"
         android:layout_marginBottom="8dp" />
 
     <!-- Group Description -->
@@ -21,7 +21,6 @@
         android:id="@+id/groupDescriptionText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
         android:textSize="16sp"
         android:layout_marginBottom="8dp" />
 
@@ -31,8 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="@color/lavender"
-
+        android:textColor="@android:color/darker_gray"
         android:layout_marginBottom="16dp" />
 
     <!-- Members List -->
@@ -40,20 +38,17 @@
         android:id="@+id/membersRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
         android:layout_marginBottom="16dp" />
 
     <!-- Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="horizontal" >
 
         <Button
             android:id="@+id/inviteMembersButton"
             android:layout_width="wrap_content"
-            android:layout_marginRight="20dp"
             android:layout_height="wrap_content"
             android:text="Invite Members" />
 

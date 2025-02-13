@@ -29,7 +29,7 @@ public class addGroup extends AppCompatActivity {
         });
 
         joinGroupButton.setOnClickListener(v -> {
-            Intent intent = new Intent(addGroup.this, joinWithKey.class);
+            Intent intent = new Intent(addGroup.this, joinGroup.class);
             intent.putExtra("loggedInUser", loggedInUser); // Pass loggedInUser
             startActivity(intent);
         });

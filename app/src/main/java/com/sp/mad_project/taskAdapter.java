@@ -33,6 +33,8 @@ public class taskAdapter extends RecyclerView.Adapter<taskAdapter.TaskViewHolder
         // Set task details
         holder.taskName.setText(task.getName());
         holder.taskDeadline.setText("Deadline: " + task.getDeadline());
+        holder.taskProgress.setText("Progress: " + task.getProgress() + "%");
+        holder.taskMember.setText("Assigned to: " + task.getAssignedMember());
 
         // View Details Button
         holder.viewDetailsButton.setOnClickListener(v -> {
@@ -49,13 +51,15 @@ public class taskAdapter extends RecyclerView.Adapter<taskAdapter.TaskViewHolder
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
-        TextView taskName, taskDeadline;
+        TextView taskName, taskDeadline, taskProgress, taskMember;
         Button viewDetailsButton;
 
         public TaskViewHolder(View itemView) {
             super(itemView);
             taskName = itemView.findViewById(R.id.taskName);
             taskDeadline = itemView.findViewById(R.id.taskDeadline);
+            taskProgress = itemView.findViewById(R.id.taskProgress);
+            taskMember = itemView.findViewById(R.id.taskMember);
             viewDetailsButton = itemView.findViewById(R.id.viewDetailsButton);
         }
     }

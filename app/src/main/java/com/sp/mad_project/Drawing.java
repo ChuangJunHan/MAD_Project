@@ -2,12 +2,12 @@ package com.sp.mad_project;
 
 public class Drawing {
     private int id;
-    private String groupName;
+    private int groupId;
     private String path;
 
-    public Drawing(int id, String groupName, String path) {
+    public Drawing(int id, int groupId, String path) {
         this.id = id;
-        this.groupName = groupName;
+        this.groupId = groupId;
         this.path = path;
     }
 
@@ -15,8 +15,8 @@ public class Drawing {
         return id;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public int getGroupId() {
+        return groupId;
     }
 
     public String getPath() {

@@ -58,8 +58,8 @@ public class createGroup extends AppCompatActivity {
                     Toast.makeText(this, "Group created and you have been added as a member!", Toast.LENGTH_SHORT).show();
 
                     // Redirect to inviteMembers page
-                    Intent intent = new Intent(createGroup.this, inviteMembers.class);
-                    intent.putExtra("groupId", groupId);
+                    Intent intent = new Intent(createGroup.this, chatDetails.class);
+                    intent.putExtra("groupId", (int) groupId);
                     intent.putExtra("loggedInUser", loggedInUser);
                     startActivity(intent);
                     finish();

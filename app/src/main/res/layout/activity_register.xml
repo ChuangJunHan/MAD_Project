@@ -6,9 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:background="@drawable/bg_screen"
-    tools:context=".register">
+    tools:context=".register"
+    android:background="@drawable/background_gradient">
+
+
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="70dp"
+        android:text="tasktopia"
+        android:textAlignment="center"
+        android:textSize="40sp" />
+
 
 
 
@@ -29,7 +40,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="tasktopia"
+                android:text="Sign Up"
                 android:textSize="36sp"
                 android:textAlignment="center"
                 android:textStyle="bold"
@@ -107,3 +118,10 @@
 
 
 </LinearLayout>
+
+
+
+
+
+
+

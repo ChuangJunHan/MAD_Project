@@ -10,7 +10,6 @@ android {
     defaultConfig {
         applicationId "com.sp.mad_project"
         minSdk 27
-        targetSdk 30
         versionCode 1
         versionName "1.0"
 

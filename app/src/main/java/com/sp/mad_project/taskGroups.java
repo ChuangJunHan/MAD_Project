@@ -48,7 +48,7 @@ public class taskGroups extends AppCompatActivity {
 
         // Handle "Add Group" button click
         addGroupButton.setOnClickListener(v -> {
-            Intent intent = new Intent(taskGroups.this, createGroup.class);
+            Intent intent = new Intent(taskGroups.this, addGroup.class);
             intent.putExtra("loggedInUser", loggedInUser);
             intent.putExtra("previousPage", "taskGroups");
             startActivity(intent);

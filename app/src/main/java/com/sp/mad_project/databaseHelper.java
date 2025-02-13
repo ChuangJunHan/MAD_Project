@@ -12,7 +12,7 @@ import java.util.List;
 public class databaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "chat_groups.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 7;
 
     // Table names
     private static final String TABLE_GROUPS = "groups";
@@ -23,10 +23,12 @@ public class databaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_TODOS = "todos";
     private static final String TABLE_TASKS = "tasks";
     private static final String TABLE_USERS = "users";
+    private static final String TABLE_GANTT_CHARTS = "gantt_charts";
 
     private static final String COLUMN_USER_ID = "id";
     private static final String COLUMN_USER_NAME = "username";
     private static final String COLUMN_USER_PASSWORD = "password";
+
     private static final String COLUMN_GROUP_ID = "id";
     private static final String COLUMN_GROUP_NAME = "name";
     private static final String COLUMN_GROUP_DESCRIPTION = "description";
@@ -54,7 +56,7 @@ public class databaseHelper extends SQLiteOpenHelper {
 
     // Columns for drawings table
     private static final String COLUMN_DRAWING_ID = "id";
-    private static final String COLUMN_DRAWING_GROUP_NAME = "group_name";
+    private static final String COLUMN_DRAWING_GROUP_ID = "group_id";
     private static final String COLUMN_DRAWING_PATH = "path";
 
     // Columns for comments table
@@ -67,6 +69,11 @@ public class databaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_TODO_TASK_ID = "task_id";
     private static final String COLUMN_TODO_TEXT = "todo_text";
     private static final String COLUMN_TODO_COMPLETED = "completed";
+
+    private static final String COLUMN_GANTT_ID = "id"; // New column
+    private static final String COLUMN_GANTT_GROUP_ID = "group_id"; // Reference to group ID
+    private static final String COLUMN_GANTT_DATA = "gantt_data"; // Gantt chart data (e.g., JSON)
+
 
     public databaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -115,7 +122,7 @@ public class databaseHelper extends SQLiteOpenHelper {
         // Create drawings table
         String CREATE_DRAWINGS_TABLE = "CREATE TABLE " + TABLE_DRAWINGS + " (" +
                 COLUMN_DRAWING_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_DRAWING_GROUP_NAME + " TEXT, " +
+                COLUMN_DRAWING_GROUP_ID + " TEXT, " +
                 COLUMN_DRAWING_PATH + " TEXT)";
         db.execSQL(CREATE_DRAWINGS_TABLE);
 
@@ -142,6 +149,13 @@ public class databaseHelper extends SQLiteOpenHelper {
                 COLUMN_USER_NAME + " TEXT UNIQUE, " +
                 COLUMN_USER_PASSWORD + " TEXT)";
         db.execSQL(CREATE_USERS_TABLE);
+
+        String CREATE_GANTT_CHARTS_TABLE = "CREATE TABLE " + TABLE_GANTT_CHARTS + " (" +
+                COLUMN_GANTT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_GANTT_GROUP_ID + " INTEGER, " +
+                COLUMN_GANTT_DATA + " TEXT, " + // Stores serialized Gantt chart data
+                "FOREIGN KEY(" + COLUMN_GANTT_GROUP_ID + ") REFERENCES " + TABLE_GROUPS + "(" + COLUMN_GROUP_ID + "))";
+        db.execSQL(CREATE_GANTT_CHARTS_TABLE);
     }
 
     @Override
@@ -258,25 +272,28 @@ public class databaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addDrawingToGroup(String groupName, String path) {
+    // Updated addDrawingToGroup
+    public void addDrawingToGroup(int groupId, String path) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COLUMN_DRAWING_GROUP_NAME, groupName);
-        values.put(COLUMN_DRAWING_PATH, path);
-        db.insert(TABLE_DRAWINGS, null, values);
+        values.put("group_id", groupId);
+        values.put("path", path);
+        db.insert("drawings", null, values);
         db.close();
     }
 
-    public List<Drawing> getDrawingsForGroup(String groupName) {
+    // Updated getDrawingsForGroup
+    public List<Drawing> getDrawingsForGroup(int groupId) {
         List<Drawing> drawings = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM drawings WHERE group_id = ?", new String[]{String.valueOf(groupId)});
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_DRAWINGS + " WHERE " + COLUMN_DRAWING_GROUP_NAME + " = ?", new String[]{groupName});
         if (cursor.moveToFirst()) {
             do {
-                drawings.add(new Drawing(cursor.getInt(0), cursor.getString(1), cursor.getString(2)));
+                drawings.add(new Drawing(cursor.getInt(0), cursor.getInt(1), cursor.getString(2)));
             } while (cursor.moveToNext());
         }
+
         cursor.close();
         db.close();
         return drawings;
@@ -515,5 +532,42 @@ public class databaseHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return members;
+    }
+
+    public boolean saveGanttChartData(int groupId, String ganttData) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_GANTT_GROUP_ID, groupId);
+        values.put(COLUMN_GANTT_DATA, ganttData);
+
+        Cursor cursor = db.rawQuery("SELECT * FROM gantt_charts WHERE group_id = ?", new String[]{String.valueOf(groupId)});
+        boolean chartExists = cursor.moveToFirst();
+        cursor.close();
+
+        long result;
+        if (chartExists) {
+            // Update existing Gantt chart
+            result = db.update(TABLE_GANTT_CHARTS, values, "group_id = ?", new String[]{String.valueOf(groupId)});
+        } else {
+            // Insert new Gantt chart
+            result = db.insert(TABLE_GANTT_CHARTS, null, values);
+        }
+
+        return result != -1;
+    }
+
+    public String getGanttChartData(int groupId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_GANTT_DATA + " FROM " + TABLE_GANTT_CHARTS +
+                " WHERE " + COLUMN_GANTT_GROUP_ID + " = ?", new String[]{String.valueOf(groupId)});
+
+        if (cursor.moveToFirst()) {
+            String ganttData = cursor.getString(0);
+            cursor.close();
+            return ganttData;
+        }
+
+        cursor.close();
+        return null; // No data found
     }
 }

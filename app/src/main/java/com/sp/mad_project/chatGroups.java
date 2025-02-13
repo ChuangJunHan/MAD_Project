@@ -48,7 +48,7 @@ public class chatGroups extends AppCompatActivity {
 
         // Handle "Add Group" button click
         addGroupButton.setOnClickListener(v -> {
-            Intent intent = new Intent(chatGroups.this, createGroup.class);
+            Intent intent = new Intent(chatGroups.this, addGroup.class);
             intent.putExtra("loggedInUser", loggedInUser);
             startActivity(intent);
         });

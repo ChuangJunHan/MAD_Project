@@ -23,13 +23,21 @@
             android:layout_height="wrap_content"
             android:text="Clear" />
 
-        <Button
-            android:id="@+id/btnSave"
+        <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:layout_marginRight="45dp"
             android:layout_marginLeft="45dp"
             android:text="Save" />
+=======
+            android:layout_weight="1" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+>>>>>>> bcb6cb2663d7ed07faae5763f7258f240daa9e85
 
         <Button
             android:id="@+id/btnDone"

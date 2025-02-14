@@ -9,5 +9,5 @@
         android:layout_width="wrap_content"        android:layout_height="wrap_content"
         android:padding="8dp"        android:text="Event Details"
         android:textColor="@android:color/black"        android:textStyle="bold"
-        android:textSize="18sp"        android:fontFamily="sans-serif-medium"
+        android:textSize="18sp"
         android:letterSpacing="0.03" /></LinearLayout>

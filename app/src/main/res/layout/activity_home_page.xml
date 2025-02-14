@@ -1,55 +1,40 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@drawable/background_gradient">
 
     <!-- User Display -->
+
     <TextView
         android:id="@+id/userDisplayTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome, User!"
-        android:textSize="20sp"
-        android:textStyle="bold"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:text="Welcome, User!"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:padding="12dp"
+        android:text="Logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Content Section -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="16dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
-
-            <TextView
-                android:id="@+id/homePageTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Welcome to the Home Page"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:layout_marginBottom="16dp" />
-
-            <TextView
-                android:id="@+id/homePageDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Navigate to chat groups, task groups, or return to the home page using the navigation bar below."
-                android:textSize="16sp"
-                android:padding="12dp"
-                android:gravity="center" />
-        </LinearLayout>
-    </ScrollView>
+        android:padding="16dp"/>
 
     <!-- Navigation Bar -->
     <LinearLayout
@@ -57,57 +42,57 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@android:color/transparent"
-        android:padding="12dp" >
+        android:padding="12dp">
 
-        <Button
-            android:id="@+id/chatGroupsButton"
+        <!-- Chat Groups Icon -->
+        <ImageButton
+            android:id="@+id/chatsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chats"
-            android:textSize="14sp"
-            android:textColor="@android:color/white"
-            android:background="@android:color/holo_blue_dark" />
+            android:padding="8dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_chat" />
 
         <Space
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <Button
-            android:id="@+id/taskGroupsButton"
+        <!-- Task Groups Icon -->
+        <ImageButton
+            android:id="@+id/tasksButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tasks"
-            android:textSize="14sp"
-            android:textColor="@android:color/white"
-            android:background="@android:color/holo_blue_dark" />
+            android:padding="8dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_task" />
 
         <Space
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <Button
-            android:id="@+id/homeButton"
+        <!-- Gantt Icon -->
+        <ImageButton
+            android:id="@+id/ganttButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Home"
-            android:textSize="14sp"
-            android:textColor="@android:color/white"
-            android:background="@android:color/holo_blue_dark" />
+            android:padding="8dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_gantt" />
 
         <Space
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <Button
+        <!-- Notifications Icon -->
+        <ImageButton
             android:id="@+id/notificationsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Notif"
-            android:textSize="14sp"
-            android:textColor="@android:color/white"
-            android:background="@android:color/holo_blue_dark" />
+            android:padding="8dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_notifications" />
     </LinearLayout>
 </LinearLayout>

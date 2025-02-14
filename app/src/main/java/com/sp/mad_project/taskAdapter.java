@@ -14,9 +14,13 @@ import java.util.List;
 
 public class taskAdapter extends RecyclerView.Adapter<taskAdapter.TaskViewHolder> {
     private List<Task> taskList;
+    private String loggedInUser;
+    private databaseHelper dbHelper;
 
-    public taskAdapter(List<Task> taskList) {
+    public taskAdapter(List<Task> taskList, String loggedInUser, databaseHelper dbHelper) {
         this.taskList = taskList;
+        this.loggedInUser = loggedInUser; // Initialize
+        this.dbHelper = dbHelper;
     }
 
     @NonNull
@@ -36,12 +40,28 @@ public class taskAdapter extends RecyclerView.Adapter<taskAdapter.TaskViewHolder
         holder.taskProgress.setText("Progress: " + task.getProgress() + "%");
         holder.taskMember.setText("Assigned to: " + task.getAssignedMember());
 
-        // View Details Button
+        // Check if the current user is the assigned member or the group creator
+        boolean isGroupCreator = dbHelper.isGroupCreator(task.getGroupId(), loggedInUser);
+        boolean isAssignedUser = loggedInUser.equals(task.getAssignedMember());
+
+        // Enable or disable the button based on the condition
+        if (isGroupCreator || isAssignedUser) {
+            holder.viewDetailsButton.setEnabled(true);
+            holder.viewDetailsButton.setAlpha(1.0f); // Fully visible when enabled
+        } else {
+            holder.viewDetailsButton.setEnabled(false);
+            holder.viewDetailsButton.setAlpha(0.5f); // Dimmed to indicate it's disabled
+        }
+
+        // View Details Button Click Listener
         holder.viewDetailsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), taskDetails.class);
-            intent.putExtra("taskId", task.getId()); // Pass the task ID to the details activity
-            intent.putExtra("groupId", task.getGroupId());
-            v.getContext().startActivity(intent);
+            if (isGroupCreator || isAssignedUser) { // Only proceed if the button is enabled
+                Intent intent = new Intent(v.getContext(), taskDetails.class);
+                intent.putExtra("taskId", task.getId());
+                intent.putExtra("groupId", task.getGroupId());
+                intent.putExtra("loggedInUser", loggedInUser);
+                v.getContext().startActivity(intent);
+            }
         });
     }
 

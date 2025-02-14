@@ -72,6 +72,9 @@
             android:name=".chatGroups"
             android:exported="true" />
         <activity
+            android:name=".ganttGroups"
+            android:exported="true" />
+        <activity
             android:name=".splashScreen"
             android:exported="true" >
             <intent-filter>

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class taskGroups extends AppCompatActivity {
+public class ganttGroups extends AppCompatActivity {
 
     private RecyclerView groupsRecyclerView;
     private Button addGroupButton;
@@ -36,34 +36,34 @@ public class taskGroups extends AppCompatActivity {
 
         if (loggedInUser == null || loggedInUser.isEmpty()) {
             Toast.makeText(this, "No user logged in. Redirecting to login...", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(taskGroups.this, login.class);
+            Intent intent = new Intent(ganttGroups.this, login.class);
             startActivity(intent);
             finish();
             return;
         }
 
         // Fetch and display groups for the logged-in user
-        loadTaskGroups();
+        loadGanttGroups();
 
         navigationHelper.setupNavigationBar(this, loggedInUser);
 
         // Handle "Add Group" button click
         addGroupButton.setOnClickListener(v -> {
-            Intent intent = new Intent(taskGroups.this, addGroup.class);
+            Intent intent = new Intent(ganttGroups.this, addGroup.class);
             intent.putExtra("loggedInUser", loggedInUser);
             startActivity(intent);
         });
     }
 
-    private void loadTaskGroups() {
-        groupList = dbHelper.getGroupsWithTaskCounts(loggedInUser);
-        adapter = new groupAdapter(this, groupList, false, loggedInUser, "taskGroups");
+    private void loadGanttGroups() {
+        groupList = dbHelper.getGroupsWithGanttCharts(loggedInUser);
+        adapter = new groupAdapter(this, groupList, false, loggedInUser, "ganttGroups");
         groupsRecyclerView.setAdapter(adapter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadTaskGroups();
+        loadGanttGroups();
     }
 }

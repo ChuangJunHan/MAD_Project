@@ -17,11 +17,13 @@ public class groupAdapter extends RecyclerView.Adapter<groupAdapter.GroupViewHol
     private Context context;
     private List<Group> groupList;
     private boolean isChatGroup; // Flag to differentiate between chat and task groups
+    private String loggedInUser, contextType;
 
-    public groupAdapter(Context context, List<Group> groupList, boolean isChatGroup) {
+    public groupAdapter(Context context, List<Group> groupList, boolean isChatGroup, String loggedInUser, String contextType) {
         this.context = context;
         this.groupList = groupList;
-        this.isChatGroup = isChatGroup;
+        this.loggedInUser = loggedInUser;
+        this.contextType = contextType;
     }
 
     @NonNull
@@ -36,15 +38,55 @@ public class groupAdapter extends RecyclerView.Adapter<groupAdapter.GroupViewHol
         Group group = groupList.get(position);
 
         holder.groupName.setText(group.getName());
-        String infoText = isChatGroup ?
-                "Number of Events: " + group.getEventCount() :
-                "Number of Tasks: " + group.getTaskCount();
-        holder.groupInfo.setText(infoText);
 
+        // Update infoText dynamically for ganttGroups
+        if ("ganttGroups".equals(contextType)) {
+            if (group.getTaskCount() > 0) { // Assuming taskCount represents ganttCount for ganttGroups
+                holder.groupInfo.setText("Gantt Chart Present: Yes");
+                holder.viewDetailsButton.setEnabled(true);
+                holder.viewDetailsButton.setAlpha(1.0f); // Fully visible when enabled
+            } else {
+                holder.groupInfo.setText("Gantt Chart Present: No");
+                holder.viewDetailsButton.setEnabled(false);
+                holder.viewDetailsButton.setAlpha(0.5f); // Dim button to indicate it's disabled
+            }
+        } else {
+            // For chatGroups or taskGroups
+            String infoText = isChatGroup ?
+                    "Number of Events: " + group.getEventCount() :
+                    "Number of Tasks: " + group.getTaskCount();
+            holder.groupInfo.setText(infoText);
+        }
+
+        // Set button text based on context type
+        if ("chatGroups".equals(contextType)) {
+            holder.viewDetailsButton.setText("View Messages");
+        } else if ("taskGroups".equals(contextType)) {
+            holder.viewDetailsButton.setText("View Tasks");
+        } else if ("ganttGroups".equals(contextType)) {
+            holder.viewDetailsButton.setText("View Chart");
+        }
+
+        // View Details Button Click Listener
         holder.viewDetailsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(context, isChatGroup ? chatDetails.class : taskView.class);
-            intent.putExtra("groupId", group.getId());
-            context.startActivity(intent);
+            if ("chatGroups".equals(contextType)) {
+                Intent intent = new Intent(v.getContext(), chatMessages.class);
+                intent.putExtra("groupId", group.getId());
+                intent.putExtra("loggedInUser", loggedInUser);
+                v.getContext().startActivity(intent);
+            } else if ("taskGroups".equals(contextType)) {
+                Intent intent = new Intent(v.getContext(), taskView.class);
+                intent.putExtra("groupId", group.getId());
+                intent.putExtra("loggedInUser", loggedInUser);
+                v.getContext().startActivity(intent);
+            } else if ("ganttGroups".equals(contextType)) {
+                if (group.getTaskCount() > 0) { // Only start activity if a Gantt chart exists
+                    Intent intent = new Intent(v.getContext(), ganttChart.class);
+                    intent.putExtra("groupId", group.getId());
+                    intent.putExtra("loggedInUser", loggedInUser);
+                    v.getContext().startActivity(intent);
+                }
+            }
         });
     }
 

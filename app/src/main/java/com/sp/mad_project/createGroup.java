@@ -53,9 +53,9 @@ public class createGroup extends AppCompatActivity {
 
             if (groupId != -1) {
                 // Automatically add the logged-in user to the group
-                boolean isUserAdded = dbHelper.addMemberToGroup(groupId, loggedInUser);
+                boolean isUserAdded = dbHelper.addMemberToGroup(groupId, loggedInUser, true);
                 if (isUserAdded) {
-                    Toast.makeText(this, "Group created and you have been added as a member!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Group created successfully!", Toast.LENGTH_SHORT).show();
 
                     // Redirect to inviteMembers page
                     Intent intent = new Intent(createGroup.this, chatDetails.class);

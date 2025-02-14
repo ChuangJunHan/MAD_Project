@@ -17,21 +17,22 @@ import java.util.List;
 public class chatGroups extends AppCompatActivity {
 
     private RecyclerView groupsRecyclerView;
-    private Button addGroupButton, logoutButton;
+    private Button addGroupButton;
+    private List<Group> groupList;
     private databaseHelper dbHelper;
     private String loggedInUser;
+    private groupAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_groups);
 
+        dbHelper = new databaseHelper(this);
+
         groupsRecyclerView = findViewById(R.id.groupsRecyclerView);
         groupsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         addGroupButton = findViewById(R.id.addGroupButton);
-        logoutButton = findViewById(R.id.logoutButton);
-
-        dbHelper = new databaseHelper(this);
 
         // Get the logged-in user from the intent
         loggedInUser = getIntent().getStringExtra("loggedInUser");
@@ -47,29 +48,19 @@ public class chatGroups extends AppCompatActivity {
         // Fetch and display groups for the logged-in user
         loadChatGroups();
 
+        navigationHelper.setupNavigationBar(this, loggedInUser);
+
         // Handle "Add Group" button click
         addGroupButton.setOnClickListener(v -> {
             Intent intent = new Intent(chatGroups.this, addGroup.class);
             intent.putExtra("loggedInUser", loggedInUser);
             startActivity(intent);
         });
-
-        // Handle logout
-        logoutButton.setOnClickListener(v -> {
-            Intent intent = new Intent(chatGroups.this, login.class);
-            startActivity(intent);
-            finish();
-        });
     }
 
     private void loadChatGroups() {
-        List<Group> chatGroups = dbHelper.getGroupsWithEventCounts(loggedInUser);
-
-        if (chatGroups.isEmpty()) {
-            Toast.makeText(this, "No chat groups found.", Toast.LENGTH_SHORT).show();
-        }
-
-        groupAdapter adapter = new groupAdapter(this, chatGroups, true);
+        groupList = dbHelper.getGroupsWithEventCounts(loggedInUser);
+        adapter = new groupAdapter(this, groupList, true, loggedInUser, "chatGroups");
         groupsRecyclerView.setAdapter(adapter);
     }
 

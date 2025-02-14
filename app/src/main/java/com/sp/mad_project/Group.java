@@ -4,13 +4,13 @@ public class Group {
     private int id;
     private String name;
     private int eventCount;
-    private int taskCount;
+    private int taskOrGanttCount;
 
-    public Group(int id, String name, int eventCount, int taskCount) {
+    public Group(int id, String name, int eventCount, int taskOrGanttCount) {
         this.id = id;
         this.name = name;
         this.eventCount = eventCount;
-        this.taskCount = taskCount;
+        this.taskOrGanttCount = taskOrGanttCount;
     }
 
     public int getId() {
@@ -26,14 +26,14 @@ public class Group {
     }
 
     public int getTaskCount() {
-        return taskCount;
+        return taskOrGanttCount;
     }
 
     public void setEventCount(int eventCount) {
         this.eventCount = eventCount;
     }
 
-    public void setTaskCount(int taskCount) {
-        this.taskCount = taskCount;
+    public void setTaskCount(int taskOrGanttCount) {
+        this.taskOrGanttCount = taskOrGanttCount;
     }
 }

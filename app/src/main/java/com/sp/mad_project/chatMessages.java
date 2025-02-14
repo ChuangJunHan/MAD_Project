@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +25,7 @@ public class chatMessages extends AppCompatActivity {
 
     private RecyclerView messagesRecyclerView;
     private EditText messageInput;
-    private Button sendButton, optionsButton;
+    private ImageButton sendButton, optionsButton;
     private String loggedInUser;
     private int groupId;
     private databaseHelper dbHelper;
@@ -80,6 +81,8 @@ public class chatMessages extends AppCompatActivity {
         });
 
         optionsButton.setOnClickListener(v -> showOptionsDialog());
+
+        navigationHelper.setupNavigationBar(this, loggedInUser);
 
         // Add click listener to the toolbar
         toolbar.setOnClickListener(v -> {

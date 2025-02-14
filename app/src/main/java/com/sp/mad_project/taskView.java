@@ -2,6 +2,7 @@ package com.sp.mad_project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,10 +17,14 @@ import java.util.List;
 public class taskView extends AppCompatActivity {
     private static final int CREATE_TASK_REQUEST = 1;
     private databaseHelper dbHelper;
+    private RecyclerView tasksRecyclerView;
     private List<Task> taskList;
     private taskAdapter adapter;
     private int groupId;
     private String loggedInUser;
+    private Toolbar toolbar;
+    private TextView groupNameTextView;
+    private Button addTaskButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +33,11 @@ public class taskView extends AppCompatActivity {
 
         dbHelper = new databaseHelper(this);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        TextView groupNameTextView = findViewById(R.id.groupName);
+        tasksRecyclerView = findViewById(R.id.tasksRecyclerView);
+        tasksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        toolbar = findViewById(R.id.toolbar);
+        groupNameTextView = findViewById(R.id.groupName);
+        addTaskButton = findViewById(R.id.addTaskButton);
 
         // Get group ID
         groupId = getIntent().getIntExtra("groupId", -1);
@@ -44,21 +52,16 @@ public class taskView extends AppCompatActivity {
             return;
         }
 
-        dbHelper = new databaseHelper(this);
-
         // Load tasks for the selected group
         loadTasks();
 
-        // Set up RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.tasksRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new taskAdapter(taskList);
-        recyclerView.setAdapter(adapter);
+        navigationHelper.setupNavigationBar(this, loggedInUser);
 
         // Add Task button click listener
-        findViewById(R.id.addTaskButton).setOnClickListener(v -> {
+        addTaskButton.setOnClickListener(v -> {
             Intent intent = new Intent(taskView.this, createTask.class);
             intent.putExtra("groupId", groupId);
+            intent.putExtra("loggedInUser", loggedInUser);
             startActivityForResult(intent, CREATE_TASK_REQUEST);
         });
 
@@ -73,6 +76,8 @@ public class taskView extends AppCompatActivity {
     // Load tasks from the database
     private void loadTasks() {
         taskList = dbHelper.getTasksByGroupId(groupId);
+        adapter = new taskAdapter(taskList, loggedInUser, dbHelper);
+        tasksRecyclerView.setAdapter(adapter);
     }
 
     @Override

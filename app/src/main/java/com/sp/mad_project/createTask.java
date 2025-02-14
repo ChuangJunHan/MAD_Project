@@ -46,6 +46,7 @@ public class createTask extends AppCompatActivity {
     private Spinner memberDropdown;
     private TextView progressView;
     private SeekBar progressSeekBar;
+    private String loggedInUser;
     private LinearLayout todoContainer, commentContainer;
     private int groupId;
     private databaseHelper dbHelper;
@@ -55,11 +56,6 @@ public class createTask extends AppCompatActivity {
     private List<String> projectMembers = new ArrayList<>(); // Holds project members
     private NotificationCompat.Builder notificationBuilder;
     private ActivityResultLauncher<String> activityResultLauncher;
-
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +76,16 @@ public class createTask extends AppCompatActivity {
         // Database setup
         dbHelper = new databaseHelper(this);
         groupId = getIntent().getIntExtra("groupId", -1);
+        loggedInUser = getIntent().getStringExtra("loggedInUser");
 
         // Load project members and populate dropdown
         loadProjectMembers();
+
+        if (!dbHelper.isGroupCreator(groupId, loggedInUser)) {
+            Toast.makeText(this, "Only the group creator can create tasks.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
             @Override
@@ -122,7 +125,6 @@ public class createTask extends AppCompatActivity {
         testNotificationButton.setOnClickListener(v -> {
             sendTestNotification();
         });
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {

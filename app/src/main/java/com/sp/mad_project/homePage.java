@@ -23,37 +23,15 @@ public class homePage extends AppCompatActivity {
         TextView userDisplay = findViewById(R.id.userDisplayTextView);
         userDisplay.setText("Welcome, " + loggedInUser + "!");
 
-        // Navigation to Chat Groups
-        Button chatGroupsButton = findViewById(R.id.chatGroupsButton);
-        chatGroupsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(homePage.this, chatGroups.class);
-            intent.putExtra("loggedInUser", loggedInUser);
-            startActivity(intent);
-        });
+        // Handle navigation bar
+        navigationHelper.setupNavigationBar(this, loggedInUser);
 
-        // Navigation to Task Groups
-        Button taskGroupsButton = findViewById(R.id.taskGroupsButton);
-        taskGroupsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(homePage.this, taskGroups.class);
-            intent.putExtra("loggedInUser", loggedInUser);
-            startActivity(intent);
-        });
-
-        // Navigation to Home (Refresh the Current Activity)
-        Button homeButton = findViewById(R.id.homeButton);
-        homeButton.setOnClickListener(v -> {
-            Intent intent = new Intent(homePage.this, homePage.class);
-            intent.putExtra("loggedInUser", loggedInUser);
+        // Handle logout
+        Button logoutButton = findViewById(R.id.logoutButton);
+        logoutButton.setOnClickListener(v -> {
+            Intent intent = new Intent(homePage.this, login.class);
             startActivity(intent);
             finish();
-        });
-
-        // In your dashboard or main activity
-        Button notificationsButton = findViewById(R.id.notificationsButton);
-        notificationsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(homePage.this, notifications.class);
-            intent.putExtra("loggedInUser", loggedInUser); // Pass the logged-in user
-            startActivity(intent);
         });
     }
 }

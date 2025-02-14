@@ -46,22 +46,42 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <Button
+        <ImageButton
             android:id="@+id/inviteMembersButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Invite Members" />
+            android:background="#00FFFFFF"
+            android:src="@drawable/ic_member" />
 
-        <Button
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageButton
             android:id="@+id/ganttChartButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gantt Chart" />
+            android:background="#00FFFFFF"
+            android:src="@drawable/ic_gantt" />
 
-        <Button
-            android:id="@+id/backButton"
+        <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Home" />
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/viewTasksButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
+            android:src="@drawable/ic_task" />
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Home" />
 </LinearLayout>

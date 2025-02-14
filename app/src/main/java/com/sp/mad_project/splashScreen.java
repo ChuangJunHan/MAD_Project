@@ -23,13 +23,13 @@ public class splashScreen extends AppCompatActivity {
         mediaPlayer.start();
 
         // Schedule the fade-out and transition after 4 seconds
-        new Handler().postDelayed(() -> fadeOutMusicAndTransition(), 2000);
+        new Handler().postDelayed(() -> fadeOutMusicAndTransition(), 1500);
     }
 
     private void fadeOutMusicAndTransition() {
         // Gradually reduce the volume of the music
         final Handler fadeHandler = new Handler();
-        final int fadeDuration = 1000; // 2 seconds for the fade-out
+        final int fadeDuration = 500; // 2 seconds for the fade-out
         final int fadeStep = 100; // Step interval in milliseconds
         final float fadeStepVolume = volume / (fadeDuration / fadeStep);
 

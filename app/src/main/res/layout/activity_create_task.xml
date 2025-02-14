@@ -9,8 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:background="@drawable/background_gradient">
+        android:gravity="center_horizontal" >
 
 
         <!-- Task Name Input -->

@@ -34,6 +34,8 @@ public class notifications extends AppCompatActivity {
 
         // Load notifications
         loadNotifications();
+
+        navigationHelper.setupNavigationBar(this, loggedInUser);
     }
 
     private void loadNotifications() {

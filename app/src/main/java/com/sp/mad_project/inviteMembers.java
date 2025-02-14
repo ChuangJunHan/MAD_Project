@@ -55,6 +55,12 @@ public class inviteMembers extends AppCompatActivity {
             return;
         }
 
+        if (!dbHelper.isGroupCreator(groupId, loggedInUser)) {
+            Toast.makeText(this, "Only the group creator can invite members.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         selectedMembers = new ArrayList<>();
         adapter = new membersAdapter(this, availableUsers, selectedMembers);
 

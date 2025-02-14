@@ -26,6 +26,7 @@ public class taskDetails extends AppCompatActivity {
     private LinearLayout todoContainer, commentContainer;
     private int taskId, groupId;
     private databaseHelper dbHelper;
+    private String loggedInUser;
 
     private List<CheckBox> todoCheckBoxes = new ArrayList<>();
     private List<String> commentList = new ArrayList<>();
@@ -51,6 +52,7 @@ public class taskDetails extends AppCompatActivity {
         dbHelper = new databaseHelper(this);
         taskId = getIntent().getIntExtra("taskId", -1);
         groupId = getIntent().getIntExtra("groupId", -1);
+        loggedInUser = getIntent().getStringExtra("loggedInUser");
 
         // Load project members and populate dropdown
         loadProjectMembers();

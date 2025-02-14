@@ -52,7 +52,7 @@ public class joinWithKey extends AppCompatActivity {
             }
 
             // Add the logged-in user to the group
-            boolean success = dbHelper.addMemberToGroup(groupId, loggedInUser);
+            boolean success = dbHelper.addMemberToGroup(groupId, loggedInUser, false);
             if (success) {
                 Toast.makeText(this, "Successfully joined the group!", Toast.LENGTH_SHORT).show();
 

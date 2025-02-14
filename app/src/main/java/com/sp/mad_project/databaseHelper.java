@@ -12,7 +12,7 @@ import java.util.List;
 public class databaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "chat_groups.db";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     // Table names
     private static final String TABLE_GROUPS = "groups";
@@ -47,6 +47,7 @@ public class databaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_MEMBER_ID = "id";
     private static final String COLUMN_MEMBER_NAME = "member_name";
     private static final String COLUMN_GROUP_ID_FK = "group_id";
+    private static final String COLUMN_IS_CREATOR = "is_creator";
 
     // Columns for messages
     private static final String COLUMN_MESSAGE_ID = "id";
@@ -106,6 +107,7 @@ public class databaseHelper extends SQLiteOpenHelper {
                 COLUMN_MEMBER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_MEMBER_NAME + " TEXT, " +
                 COLUMN_GROUP_ID_FK + " INTEGER, " +
+                COLUMN_IS_CREATOR + " INTEGER DEFAULT 0, " +
                 "FOREIGN KEY(" + COLUMN_GROUP_ID_FK + ") REFERENCES " + TABLE_GROUPS + "(" + COLUMN_GROUP_ID + "))";
         db.execSQL(CREATE_GROUP_MEMBERS_TABLE);
 
@@ -201,11 +203,12 @@ public class databaseHelper extends SQLiteOpenHelper {
     }
 
     // Add a single member to a group
-    public boolean addMemberToGroup(long groupId, String memberName) {
+    public boolean addMemberToGroup(long groupId, String memberName, boolean isCreator) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("group_id", groupId);
         values.put("member_name", memberName);
+        values.put("is_creator", isCreator ? 1 : 0);
 
         // Check if the user is already in the group
         Cursor cursor = db.rawQuery("SELECT * FROM group_members WHERE group_id = ? AND member_name = ?",
@@ -654,6 +657,42 @@ public class databaseHelper extends SQLiteOpenHelper {
                 int taskCount = cursor.getInt(2);
 
                 groups.add(new Group(id, name, 0, taskCount)); // No event count for task groups
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return groups;
+    }
+
+    public boolean isGroupCreator(int groupId, String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM group_members WHERE group_id = ? AND member_name = ? AND is_creator = 1",
+                new String[]{String.valueOf(groupId), username}
+        );
+        boolean isCreator = cursor.moveToFirst();
+        cursor.close();
+        return isCreator;
+    }
+
+    public List<Group> getGroupsWithGanttCharts(String username) {
+        List<Group> groups = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT g.id, g.name, " +
+                "(SELECT COUNT(*) FROM gantt_charts gc WHERE gc.group_id = g.id) AS gantt_count " +
+                "FROM groups g " +
+                "JOIN group_members gm ON g.id = gm.group_id " +
+                "WHERE gm.member_name = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{username});
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String name = cursor.getString(1);
+                int ganttCount = cursor.getInt(2);
+
+                groups.add(new Group(id, name, 0, ganttCount)); // Add ganttCount as taskCount
             } while (cursor.moveToNext());
         }
 

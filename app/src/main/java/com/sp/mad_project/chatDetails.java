@@ -3,6 +3,7 @@ package com.sp.mad_project;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +18,8 @@ public class chatDetails extends AppCompatActivity {
 
     private TextView groupNameText, groupDescriptionText, groupKeyText;
     private RecyclerView membersRecyclerView;
-    private Button inviteMembersButton, backButton, ganttChartButton;
+    private ImageButton inviteMembersButton, ganttChartButton, viewTasksButton;
+    private Button backButton;
     private databaseHelper dbHelper;
     private int groupId;
     private String loggedInUser;
@@ -35,7 +37,9 @@ public class chatDetails extends AppCompatActivity {
         membersRecyclerView = findViewById(R.id.membersRecyclerView);
         inviteMembersButton = findViewById(R.id.inviteMembersButton);
         ganttChartButton = findViewById(R.id.ganttChartButton);
+        viewTasksButton = findViewById(R.id.viewTasksButton);
         backButton = findViewById(R.id.backButton);
+
 
         dbHelper = new databaseHelper(this);
 
@@ -74,6 +78,14 @@ public class chatDetails extends AppCompatActivity {
         // Invite Members Button
         ganttChartButton.setOnClickListener(v -> {
             Intent intent = new Intent(chatDetails.this, ganttChart.class);
+            intent.putExtra("groupId", groupId);
+            intent.putExtra("loggedInUser", loggedInUser);
+            startActivity(intent);
+        });
+
+        // Invite Members Button
+        viewTasksButton.setOnClickListener(v -> {
+            Intent intent = new Intent(chatDetails.this, taskView.class);
             intent.putExtra("groupId", groupId);
             intent.putExtra("loggedInUser", loggedInUser);
             startActivity(intent);

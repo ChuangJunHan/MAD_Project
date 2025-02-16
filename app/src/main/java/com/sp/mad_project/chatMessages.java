@@ -75,8 +75,10 @@ public class chatMessages extends AppCompatActivity {
                 return;
             }
 
-            dbHelper.addMessageToGroupById(groupId, loggedInUser, messageText, "message");
-            messages.add(new Message(loggedInUser, messageText, "message"));
+            String currentDate = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(new java.util.Date());
+
+            dbHelper.addMessageToGroupById(groupId, loggedInUser, messageText, "message", currentDate);
+            messages.add(new Message(loggedInUser, messageText, "message", currentDate));
             adapter.notifyDataSetChanged();
             messagesRecyclerView.scrollToPosition(messages.size() - 1);
             messageInput.setText("");
@@ -150,10 +152,8 @@ public class chatMessages extends AppCompatActivity {
     }
 
     private void saveEvent(String eventName, String eventDate) {
-        String eventDetails = "Event: " + eventName + "\nDate: " + eventDate;
-
-        dbHelper.addMessageToGroupById(groupId, "System", eventDetails, "event");
-        messages.add(new Message("System", eventDetails, "event"));
+        dbHelper.addMessageToGroupById(groupId, "System", eventName, "event", eventDate);
+        messages.add(new Message("System", eventName, "event", eventDate));
         adapter.notifyDataSetChanged();
         messagesRecyclerView.scrollToPosition(messages.size() - 1);
     }
@@ -185,8 +185,10 @@ public class chatMessages extends AppCompatActivity {
         if (requestCode == WHITEBOARD_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             String drawingPath = data.getStringExtra("drawingPath");
             if (drawingPath != null) {
-                dbHelper.addMessageToGroupById(groupId, loggedInUser, drawingPath, "drawing");
-                messages.add(new Message(loggedInUser, drawingPath, "drawing"));
+                String currentDate = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(new java.util.Date());
+
+                dbHelper.addMessageToGroupById(groupId, loggedInUser, drawingPath, "drawing", currentDate);
+                messages.add(new Message(loggedInUser, drawingPath, "drawing", currentDate));
                 adapter.notifyDataSetChanged();
                 messagesRecyclerView.scrollToPosition(messages.size() - 1);
             }
@@ -198,8 +200,10 @@ public class chatMessages extends AppCompatActivity {
             // Save the photo locally and send the photo message
             String photoPath = savePhoto(photo);
             if (photoPath != null) {
-                dbHelper.addMessageToGroupById(groupId, loggedInUser, photoPath, "photo");
-                messages.add(new Message(loggedInUser, photoPath, "photo"));
+                String currentDate = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(new java.util.Date());
+
+                dbHelper.addMessageToGroupById(groupId, loggedInUser, photoPath, "photo", currentDate);
+                messages.add(new Message(loggedInUser, photoPath, "photo", currentDate));
                 adapter.notifyDataSetChanged();
                 messagesRecyclerView.scrollToPosition(messages.size() - 1);
             } else {

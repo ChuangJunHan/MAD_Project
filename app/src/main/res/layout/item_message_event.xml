@@ -10,20 +10,21 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/messageText"
+        android:id="@+id/messageContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:letterSpacing="0.03"
-        android:padding="8dp"
         android:text="Event Details"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/photoView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:visibility="gone" /> <!-- Optional photoView -->
+    <TextView
+        android:id="@+id/messageDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Event Date"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
 </LinearLayout>

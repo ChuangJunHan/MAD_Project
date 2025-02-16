@@ -39,7 +39,7 @@ public class notificationAdapter extends RecyclerView.Adapter<notificationAdapte
         } else if (notification instanceof Message) {
             Message message = (Message) notification;
             holder.notificationTitle.setText("Event: " + message.getContent());
-            holder.notificationDate.setText("Date: N/A"); // Update this if Message has a date field
+            holder.notificationDate.setText("Date: " + message.getDate());
         }
     }
 

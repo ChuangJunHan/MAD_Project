@@ -12,7 +12,7 @@ import java.util.List;
 public class databaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "chat_groups.db";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     // Table names
     private static final String TABLE_GROUPS = "groups";
@@ -54,6 +54,7 @@ public class databaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_MESSAGE_SENDER = "sender";
     private static final String COLUMN_MESSAGE_CONTENT = "message";
     private static final String COLUMN_MESSAGE_TYPE = "type"; // "message" or "event"
+    private static final String COLUMN_MESSAGE_DATE = "date";
 
     // Columns for drawings table
     private static final String COLUMN_DRAWING_ID = "id";
@@ -118,6 +119,7 @@ public class databaseHelper extends SQLiteOpenHelper {
                 COLUMN_MESSAGE_SENDER + " TEXT, " +
                 COLUMN_MESSAGE_CONTENT + " TEXT, " +
                 COLUMN_MESSAGE_TYPE + " TEXT, " +
+                COLUMN_MESSAGE_DATE + " TEXT, " +
                 "FOREIGN KEY(" + COLUMN_GROUP_ID_FK + ") REFERENCES " + TABLE_GROUPS + "(" + COLUMN_GROUP_ID + "))";
         db.execSQL(CREATE_MESSAGES_TABLE);
 
@@ -245,8 +247,9 @@ public class databaseHelper extends SQLiteOpenHelper {
         List<Message> messages = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(
-                "SELECT " + COLUMN_MESSAGE_SENDER + ", " + COLUMN_MESSAGE_CONTENT + ", " + COLUMN_MESSAGE_TYPE +
-                        " FROM " + TABLE_MESSAGES +
+                "SELECT " + COLUMN_MESSAGE_SENDER + ", " + COLUMN_MESSAGE_CONTENT + ", " +
+                        COLUMN_MESSAGE_TYPE + ", date " + // Include date
+                        "FROM " + TABLE_MESSAGES +
                         " WHERE " + COLUMN_GROUP_ID_FK + " = ?",
                 new String[]{String.valueOf(groupId)});
 
@@ -255,7 +258,9 @@ public class databaseHelper extends SQLiteOpenHelper {
                 String sender = cursor.getString(0);
                 String content = cursor.getString(1);
                 String type = cursor.getString(2);
-                messages.add(new Message(sender, content, type));
+                String date = cursor.getString(3); // Get the date
+
+                messages.add(new Message(sender, content, type, date)); // Pass date to the Message constructor
             } while (cursor.moveToNext());
         }
 
@@ -264,13 +269,15 @@ public class databaseHelper extends SQLiteOpenHelper {
     }
 
     // Retrieve messages for a group
-    public void addMessageToGroupById(int groupId, String sender, String content, String type) {
+    public void addMessageToGroupById(int groupId, String sender, String content, String type, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_GROUP_ID_FK, groupId);
         values.put(COLUMN_MESSAGE_SENDER, sender);
         values.put(COLUMN_MESSAGE_CONTENT, content);
         values.put(COLUMN_MESSAGE_TYPE, type); // "message" or "event"
+        values.put("date", date); // Add the date
+
         db.insert(TABLE_MESSAGES, null, values);
         db.close();
     }
@@ -596,17 +603,18 @@ public class databaseHelper extends SQLiteOpenHelper {
         }
 
         // Query to get events for those groups
-        String eventQuery = "SELECT * FROM messages WHERE type = 'event' AND group_id IN (" +
-                new String(new char[groupIds.size() - 1]).replace("\0", "?,") + "?)";
+        String placeholders = new String(new char[groupIds.size() - 1]).replace("\0", "?,") + "?";
+        String eventQuery = "SELECT sender, message, type, date FROM messages WHERE type = 'event' AND group_id IN (" + placeholders + ")";
         Cursor eventCursor = db.rawQuery(eventQuery, groupIds.toArray(new String[0]));
 
         if (eventCursor.moveToFirst()) {
             do {
-                int id = eventCursor.getInt(eventCursor.getColumnIndexOrThrow("id"));
-                String sender = eventCursor.getString(eventCursor.getColumnIndexOrThrow("sender"));
-                String content = eventCursor.getString(eventCursor.getColumnIndexOrThrow("message"));
+                String sender = eventCursor.getString(0);
+                String content = eventCursor.getString(1);
+                String type = eventCursor.getString(2);
+                String date = eventCursor.getString(3); // Get the date
 
-                events.add(new Message(sender, content, "event"));
+                events.add(new Message(sender, content, type, date)); // Pass date to the Message constructor
             } while (eventCursor.moveToNext());
         }
 

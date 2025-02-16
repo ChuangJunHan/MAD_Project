@@ -48,6 +48,10 @@ public class messageAdapter extends RecyclerView.Adapter<messageAdapter.MessageV
                 holder.messageText.setVisibility(View.VISIBLE);
                 holder.messageText.setText(message.getContent());
             }
+            if (holder.messageDate != null) {
+                holder.messageDate.setVisibility(View.VISIBLE);
+                holder.messageDate.setText(message.getDate());
+            }
         } else { // Regular text message
             if (holder.senderName != null) {
                 holder.senderName.setVisibility(View.VISIBLE);
@@ -66,14 +70,15 @@ public class messageAdapter extends RecyclerView.Adapter<messageAdapter.MessageV
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
-        TextView messageText, senderName;
-        ImageView photoView; // Add ImageView for photo messages
+        TextView messageText, senderName, messageDate;
+        ImageView photoView;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
-            messageText = itemView.findViewById(R.id.messageText);
+            messageText = itemView.findViewById(R.id.messageContent);
+            messageDate = itemView.findViewById(R.id.messageDate); // Bind the event date TextView
             senderName = itemView.findViewById(R.id.senderName);
-            photoView = itemView.findViewById(R.id.photoView); // Bind ImageView
+            photoView = itemView.findViewById(R.id.photoView);
         }
     }
 

@@ -3,63 +3,108 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/background_gradient">
 
+
+    <!-- Container for all content -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/linearLayoutContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@drawable/background_gradient">
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp">
 
-        <!-- Gantt Chart -->
-        <TableLayout
-            android:id="@+id/ganttTable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:stretchColumns="*" />
 
-        <ScrollView
+        <!-- Week Controls -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+
+
+            <Button
+                android:id="@+id/btnAddWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button"
+                android:text="Add Week"
+                android:layout_marginEnd="8dp" />
+
+
+            <Button
+                android:id="@+id/btnDeleteWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button"
+                android:text="Delete Week" />
+        </LinearLayout>
+
+
+        <!-- Gantt Chart -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
 
             <HorizontalScrollView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+
+                <TableLayout
+                    android:id="@+id/ganttTable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="*" />
             </HorizontalScrollView>
         </ScrollView>
 
-        <Button
-            android:id="@+id/btnAddTask"
-            android:layout_width="wrap_content"
+
+        <!-- Task Controls -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Task" />
-        <Button
-            android:id="@+id/btnDeleteTask"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Delete Task" />
-        <Button
-            android:id="@+id/btnAddWeek"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Week" />
-        <Button
-            android:id="@+id/btnDeleteWeek"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Delete Week" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp">
+
+
+            <Button
+                android:id="@+id/btnAddTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button"
+                android:text="Add Task"
+                android:layout_marginEnd="8dp" />
+
+
+            <Button
+                android:id="@+id/btnDeleteTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button"
+                android:text="Delete Task" />
+        </LinearLayout>
+
+
+        <!-- Save Chart Button -->
         <Button
             android:id="@+id/btnSaveGantt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Save Chart" />
-
-
+            android:background="@drawable/rounded_button"
+            android:text="Save Chart"
+            android:layout_gravity="center" />
     </LinearLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

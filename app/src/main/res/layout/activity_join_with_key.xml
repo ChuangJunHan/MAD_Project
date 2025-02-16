@@ -5,10 +5,12 @@
     android:padding="16dp"
     android:background="@drawable/background_gradient1">
 
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="150dp" />
+
 
     <TextView
         android:id="@+id/textView5"
@@ -18,7 +20,8 @@
         android:text="Join Group"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
-        android:textSize="40sp" />
+        android:textSize="48sp" />
+
 
     <TextView
         android:id="@+id/textView6"
@@ -30,10 +33,13 @@
         android:textColor="#FFFFFF"
         android:textSize="20sp" />
 
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="75dp" />
+
+
 
 
     <EditText
@@ -46,6 +52,7 @@
         android:textSize="16sp"
         android:background="@drawable/rounded_text"/>
 
+
     <Button
         android:id="@+id/joinGroupButton"
         android:layout_width="match_parent"
@@ -54,5 +61,6 @@
         android:textSize="16sp"
         android:padding="12dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/rounded_button"/>
+        android:background="@drawable/rounded_button"
+        />
 </LinearLayout>

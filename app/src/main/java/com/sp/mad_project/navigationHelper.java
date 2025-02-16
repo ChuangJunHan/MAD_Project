@@ -27,6 +27,15 @@ public class navigationHelper {
             });
         }
 
+        ImageButton homeButton = activity.findViewById(R.id.homeButton);
+        if (homeButton != null) {
+            homeButton.setOnClickListener(v -> {
+                Intent intent = new Intent(activity, homePage.class);
+                intent.putExtra("loggedInUser", loggedInUser);
+                activity.startActivity(intent);
+            });
+        }
+
         // Navigation to Gantt Groups
         ImageButton ganttButton = activity.findViewById(R.id.ganttButton);
         if (ganttButton != null) {

@@ -3,8 +3,8 @@ package com.sp.mad_project;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -16,12 +16,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Calendar;
 import java.util.List;
 
 public class chatMessages extends AppCompatActivity {
 
     private static final int WHITEBOARD_REQUEST_CODE = 100;
+    private static final int CAMERA_REQUEST_CODE = 200;
 
     private RecyclerView messagesRecyclerView;
     private EditText messageInput;
@@ -54,7 +57,6 @@ public class chatMessages extends AppCompatActivity {
             finish();
             return;
         }
-
 
         messagesRecyclerView = findViewById(R.id.messagesRecyclerView);
         messageInput = findViewById(R.id.messageInput);
@@ -94,7 +96,7 @@ public class chatMessages extends AppCompatActivity {
     }
 
     private void showOptionsDialog() {
-        String[] options = {"Send Event", "Send File", "Open Whiteboard"};
+        String[] options = {"Send Event", "Send File", "Open Whiteboard", "Take Photo"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose an Option");
@@ -105,6 +107,8 @@ public class chatMessages extends AppCompatActivity {
                 sendFile();
             } else if (which == 2) {
                 openWhiteboard();
+            } else if (which == 3) {
+                takePhoto();
             }
         });
         builder.show();
@@ -165,6 +169,15 @@ public class chatMessages extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void takePhoto() {
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+        } else {
+            Toast.makeText(this, "No camera app available", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -177,6 +190,34 @@ public class chatMessages extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
                 messagesRecyclerView.scrollToPosition(messages.size() - 1);
             }
+        }
+
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+
+            // Save the photo locally and send the photo message
+            String photoPath = savePhoto(photo);
+            if (photoPath != null) {
+                dbHelper.addMessageToGroupById(groupId, loggedInUser, photoPath, "photo");
+                messages.add(new Message(loggedInUser, photoPath, "photo"));
+                adapter.notifyDataSetChanged();
+                messagesRecyclerView.scrollToPosition(messages.size() - 1);
+            } else {
+                Toast.makeText(this, "Failed to save photo", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private String savePhoto(Bitmap photo) {
+        try {
+            File photoFile = new File(getExternalFilesDir(null), "photo_" + System.currentTimeMillis() + ".jpg");
+            FileOutputStream fos = new FileOutputStream(photoFile);
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.close();
+            return photoFile.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

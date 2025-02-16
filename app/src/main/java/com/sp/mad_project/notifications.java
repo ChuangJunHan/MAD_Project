@@ -1,17 +1,20 @@
 package com.sp.mad_project;
 
 import android.os.Bundle;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class notifications extends AppCompatActivity {
 
-    private LinearLayout notificationContainer;
+    private RecyclerView notificationsRecyclerView;
+    private notificationAdapter adapter;
+    private List<Object> notificationList; // Holds tasks and events
     private databaseHelper dbHelper;
     private String loggedInUser;
 
@@ -20,10 +23,10 @@ public class notifications extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
 
-        notificationContainer = findViewById(R.id.notificationContainer);
-        dbHelper = new databaseHelper(this);
+        notificationsRecyclerView = findViewById(R.id.notificationsRecyclerView);
+        notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Get the logged-in user from intent
+        dbHelper = new databaseHelper(this);
         loggedInUser = getIntent().getStringExtra("loggedInUser");
 
         if (loggedInUser == null) {
@@ -32,55 +35,34 @@ public class notifications extends AppCompatActivity {
             return;
         }
 
+        // Initialize the notification list
+        notificationList = new ArrayList<>();
+
         // Load notifications
         loadNotifications();
 
         navigationHelper.setupNavigationBar(this, loggedInUser);
+
+        // Set up the adapter
+        adapter = new notificationAdapter(this, notificationList);
+        notificationsRecyclerView.setAdapter(adapter);
     }
 
     private void loadNotifications() {
-        notificationContainer.removeAllViews();
-
-        // Fetch tasks within 7 days assigned to the logged-in user
+        // Fetch tasks assigned to the logged-in user
         List<Task> tasks = dbHelper.getTasksForUser(loggedInUser);
         if (tasks.isEmpty()) {
-            addMessage("No upcoming tasks found.");
+            Toast.makeText(this, "No tasks found.", Toast.LENGTH_SHORT).show();
         } else {
-            addMessage("Upcoming Tasks:");
-            for (Task task : tasks) {
-                addTaskToView(task);
-            }
+            notificationList.addAll(tasks);
         }
 
+        // Fetch events for the groups the user is part of
         List<Message> events = dbHelper.getEventsForUserGroups(loggedInUser);
         if (events.isEmpty()) {
-            addMessage("No events found.");
+            Toast.makeText(this, "No events found.", Toast.LENGTH_SHORT).show();
         } else {
-            addMessage("Events:");
-            for (Message event : events) {
-                addEventToView(event);
-            }
+            notificationList.addAll(events);
         }
-    }
-
-    private void addMessage(String message) {
-        TextView textView = new TextView(this);
-        textView.setText(message);
-        textView.setPadding(16, 16, 16, 16);
-        notificationContainer.addView(textView);
-    }
-
-    private void addTaskToView(Task task) {
-        TextView taskView = new TextView(this);
-        taskView.setText("Task: " + task.getName() + "\nDeadline: " + task.getDeadline());
-        taskView.setPadding(16, 16, 16, 16);
-        notificationContainer.addView(taskView);
-    }
-
-    private void addEventToView(Message event) {
-        TextView eventView = new TextView(this);
-        eventView.setText("Event: " + event.getContent());
-        eventView.setPadding(16, 16, 16, 16);
-        notificationContainer.addView(eventView);
     }
 }

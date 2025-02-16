@@ -21,7 +21,8 @@
             android:id="@+id/btnClear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Clear" />
+            android:text="Clear"
+            android:background="@drawable/rounded_button" />
 
         <Space
             android:layout_width="wrap_content"
@@ -37,6 +38,7 @@
             android:id="@+id/btnDone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Done" />
+            android:text="Done"
+            android:background="@drawable/rounded_button"/>
     </LinearLayout>
 </RelativeLayout>

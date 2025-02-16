@@ -21,6 +21,7 @@ public class whiteboardGallery extends AppCompatActivity {
     private databaseHelper dbHelper;
     private List<Drawing> drawings;
     private drawingAdapter adapter;
+    private String loggedInUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,8 @@ public class whiteboardGallery extends AppCompatActivity {
 
         drawingsRecyclerView = findViewById(R.id.drawingsRecyclerView);
         addDrawingButton = findViewById(R.id.addDrawingButton);
+
+        loggedInUser = getIntent().getStringExtra("loggedInUser");
 
         dbHelper = new databaseHelper(this);
 
@@ -40,6 +43,8 @@ public class whiteboardGallery extends AppCompatActivity {
         }
 
         loadDrawings();
+
+        navigationHelper.setupNavigationBar(this, loggedInUser);
 
         addDrawingButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, whiteboard.class);

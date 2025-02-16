@@ -8,14 +8,14 @@
     android:background="@drawable/background_gradient1">
 
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minHeight="70dp"
         android:text="New group"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:textSize="40sp"
+        android:textStyle="bold" />
 
     <Space
         android:layout_width="match_parent"
@@ -35,7 +35,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Create your own group"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:background="@drawable/rounded_button"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -51,5 +52,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Join an existing group"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:background="@drawable/rounded_button"/>
 </LinearLayout>

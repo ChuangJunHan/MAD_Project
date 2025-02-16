@@ -25,7 +25,6 @@ public class joinWithKey extends AppCompatActivity {
 
         dbHelper = new databaseHelper(this);
 
-        // Get logged-in user from intent
         loggedInUser = getIntent().getStringExtra("loggedInUser");
 
         if (loggedInUser == null || loggedInUser.isEmpty()) {
@@ -44,21 +43,18 @@ public class joinWithKey extends AppCompatActivity {
                 return;
             }
 
-            // Find group by key
             long groupId = dbHelper.getGroupIdByKey(groupKey);
             if (groupId == -1) {
                 Toast.makeText(this, "Invalid group key", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Add the logged-in user to the group
             boolean success = dbHelper.addMemberToGroup(groupId, loggedInUser, false);
             if (success) {
                 Toast.makeText(this, "Successfully joined the group!", Toast.LENGTH_SHORT).show();
 
-                // Redirect to chatGroups
                 Intent intent = new Intent(joinWithKey.this, chatGroups.class);
-                intent.putExtra("loggedInUser", loggedInUser); // Pass logged-in user
+                intent.putExtra("loggedInUser", loggedInUser);
                 startActivity(intent);
                 finish();
             } else {

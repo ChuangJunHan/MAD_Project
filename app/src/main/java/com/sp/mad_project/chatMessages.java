@@ -1,8 +1,10 @@
 package com.sp.mad_project;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.EditText;
@@ -13,6 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +29,7 @@ public class chatMessages extends AppCompatActivity {
 
     private static final int WHITEBOARD_REQUEST_CODE = 100;
     private static final int CAMERA_REQUEST_CODE = 200;
+    private static final int PERMISSION_REQUEST_CODE = 300;
 
     private RecyclerView messagesRecyclerView;
     private EditText messageInput;
@@ -88,13 +93,16 @@ public class chatMessages extends AppCompatActivity {
 
         navigationHelper.setupNavigationBar(this, loggedInUser);
 
-        // Add click listener to the toolbar
         toolbar.setOnClickListener(v -> {
             Intent intent = new Intent(chatMessages.this, chatDetails.class);
             intent.putExtra("loggedInUser", loggedInUser);
             intent.putExtra("groupId", groupId);
             startActivity(intent);
         });
+
+        if (!hasCameraPermissions()) {
+            requestCameraPermissions();
+        }
     }
 
     private void showOptionsDialog() {
@@ -110,10 +118,38 @@ public class chatMessages extends AppCompatActivity {
             } else if (which == 2) {
                 openWhiteboard();
             } else if (which == 3) {
-                takePhoto();
+                if (hasCameraPermissions()) {
+                    takePhoto();
+                } else {
+                    requestCameraPermissions();
+                }
             }
         });
         builder.show();
+    }
+
+    private boolean hasCameraPermissions() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestCameraPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        }, PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Camera permissions are required to take photos", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void showEventNameDialog() {
@@ -166,6 +202,7 @@ public class chatMessages extends AppCompatActivity {
         Intent intent = new Intent(this, whiteboardGallery.class);
         intent.putExtra("groupId", groupId);
         intent.putExtra("previousPage", "chatMessages");
+        intent.putExtra("loggedInUser", loggedInUser);
         startActivity(intent);
     }
 
@@ -197,7 +234,6 @@ public class chatMessages extends AppCompatActivity {
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
 
-            // Save the photo locally and send the photo message
             String photoPath = savePhoto(photo);
             if (photoPath != null) {
                 String currentDate = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(new java.util.Date());

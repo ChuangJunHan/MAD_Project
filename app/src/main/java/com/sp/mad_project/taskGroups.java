@@ -31,7 +31,6 @@ public class taskGroups extends AppCompatActivity {
         groupsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         addGroupButton = findViewById(R.id.addGroupButton);
 
-        // Get the logged-in user from the intent
         loggedInUser = getIntent().getStringExtra("loggedInUser");
 
         if (loggedInUser == null || loggedInUser.isEmpty()) {
@@ -42,12 +41,10 @@ public class taskGroups extends AppCompatActivity {
             return;
         }
 
-        // Fetch and display groups for the logged-in user
         loadTaskGroups();
 
         navigationHelper.setupNavigationBar(this, loggedInUser);
 
-        // Handle "Add Group" button click
         addGroupButton.setOnClickListener(v -> {
             Intent intent = new Intent(taskGroups.this, addGroup.class);
             intent.putExtra("loggedInUser", loggedInUser);

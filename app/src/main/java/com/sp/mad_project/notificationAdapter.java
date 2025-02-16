@@ -14,7 +14,7 @@ import java.util.List;
 public class notificationAdapter extends RecyclerView.Adapter<notificationAdapter.NotificationViewHolder> {
 
     private Context context;
-    private List<Object> notifications; // This list will contain both Task and Message objects
+    private List<Object> notifications;
 
     public notificationAdapter(Context context, List<Object> notifications) {
         this.context = context;

@@ -19,10 +19,10 @@ public class ganttChart extends AppCompatActivity {
 
     private TableLayout ganttTable;
     private Button btnAddWeek, btnAddTask, btnSaveGantt, btnDeleteTask, btnDeleteWeek;
-    private int weekCount = 0; // Number of weeks
-    private int taskCount = 0; // Number of tasks
-    private int groupId; // Group ID for this Gantt chart
-    private databaseHelper dbHelper; // Use your databaseHelper
+    private int weekCount = 0;
+    private int taskCount = 0;
+    private int groupId;
+    private databaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +36,8 @@ public class ganttChart extends AppCompatActivity {
         btnDeleteTask = findViewById(R.id.btnDeleteTask);
         btnDeleteWeek = findViewById(R.id.btnDeleteWeek);
 
-        // Initialize database helper
         dbHelper = new databaseHelper(this);
 
-        // Get the group ID passed from the previous activity
         groupId = getIntent().getIntExtra("groupId", -1);
 
         if (groupId == -1) {
@@ -48,10 +46,8 @@ public class ganttChart extends AppCompatActivity {
             return;
         }
 
-        // Load existing Gantt chart for this group
         loadGanttChart();
 
-        // Add listeners for buttons
         btnAddWeek.setOnClickListener(v -> addWeek());
         btnAddTask.setOnClickListener(v -> addTaskRow("Task " + (taskCount + 1)));
         btnSaveGantt.setOnClickListener(v -> saveGanttChart());
@@ -62,14 +58,12 @@ public class ganttChart extends AppCompatActivity {
     private void addHeaderRow() {
         TableRow headerRow = new TableRow(this);
 
-        // "Task" column
         TextView taskHeader = new TextView(this);
         taskHeader.setText("Task");
         taskHeader.setPadding(16, 16, 16, 16);
         taskHeader.setBackgroundResource(R.drawable.cell_border);
         headerRow.addView(taskHeader);
 
-        // Add existing week columns to header
         for (int i = 1; i <= weekCount; i++) {
             TextView weekHeader = new TextView(this);
             weekHeader.setText("Week " + i);
@@ -104,14 +98,12 @@ public class ganttChart extends AppCompatActivity {
 
         TableRow taskRow = new TableRow(this);
 
-        // Task Name
         TextView taskCell = new TextView(this);
         taskCell.setText(taskName);
         taskCell.setPadding(16, 16, 16, 16);
         taskCell.setBackgroundResource(R.drawable.cell_border);
         taskRow.addView(taskCell);
 
-        // Add blank cells for the existing weeks
         for (int i = 0; i < weekCount; i++) {
             taskRow.addView(createClickableCell());
         }
@@ -124,14 +116,13 @@ public class ganttChart extends AppCompatActivity {
         blankCell.setPadding(16, 16, 16, 16);
         blankCell.setBackgroundResource(R.drawable.cell_border);
 
-        // Add click listener to toggle selection
         blankCell.setOnClickListener(v -> {
             if (blankCell.isSelected()) {
                 blankCell.setSelected(false);
-                blankCell.setBackgroundResource(R.drawable.cell_border); // Reset to default
+                blankCell.setBackgroundResource(R.drawable.cell_border);
             } else {
                 blankCell.setSelected(true);
-                blankCell.setBackgroundColor(Color.GREEN); // Highlight
+                blankCell.setBackgroundColor(Color.GREEN);
             }
         });
 
@@ -139,7 +130,7 @@ public class ganttChart extends AppCompatActivity {
     }
 
     private void deleteSelectedRow() {
-        if (ganttTable.getChildCount() > 1) { // Ensure at least the header exists
+        if (ganttTable.getChildCount() > 1) {
             ganttTable.removeViewAt(ganttTable.getChildCount() - 1);
             taskCount--;
             Toast.makeText(this, "Last row deleted.", Toast.LENGTH_SHORT).show();
@@ -154,11 +145,9 @@ public class ganttChart extends AppCompatActivity {
             return;
         }
 
-        // Remove the last column from the header row
         TableRow headerRow = (TableRow) ganttTable.getChildAt(0);
         headerRow.removeViewAt(headerRow.getChildCount() - 1);
 
-        // Remove the last column from all task rows
         for (int i = 1; i < ganttTable.getChildCount(); i++) {
             TableRow taskRow = (TableRow) ganttTable.getChildAt(i);
             taskRow.removeViewAt(taskRow.getChildCount() - 1);
@@ -170,7 +159,7 @@ public class ganttChart extends AppCompatActivity {
 
     private void saveGanttChart() {
         String chartData = serializeGanttChart();
-        Log.d("SerializedData", "Saving chart: " + chartData); // Debug log
+        Log.d("SerializedData", "Saving chart: " + chartData);
 
         boolean success = dbHelper.saveGanttChartData(groupId, chartData);
 
@@ -184,18 +173,18 @@ public class ganttChart extends AppCompatActivity {
     private String serializeGanttChart() {
         JSONArray chartArray = new JSONArray();
 
-        for (int i = 1; i < ganttTable.getChildCount(); i++) { // Skip header row
+        for (int i = 1; i < ganttTable.getChildCount(); i++) {
             TableRow row = (TableRow) ganttTable.getChildAt(i);
             JSONObject rowData = new JSONObject();
 
             try {
                 TextView taskCell = (TextView) row.getChildAt(0);
-                rowData.put("task", taskCell.getText().toString()); // Save task name
+                rowData.put("task", taskCell.getText().toString());
 
                 JSONArray weeks = new JSONArray();
-                for (int j = 1; j < row.getChildCount(); j++) { // Start from 1 to skip task name column
+                for (int j = 1; j < row.getChildCount(); j++) {
                     TextView weekCell = (TextView) row.getChildAt(j);
-                    weeks.put(weekCell.isSelected()); // Save selection state
+                    weeks.put(weekCell.isSelected());
                 }
                 rowData.put("weeks", weeks);
 
@@ -215,25 +204,23 @@ public class ganttChart extends AppCompatActivity {
         if (savedChartData != null) {
             deserializeGanttChart(savedChartData);
         } else {
-            addHeaderRow(); // Add a default header row if no data is saved
+            addHeaderRow();
         }
     }
 
     private void deserializeGanttChart(String chartData) {
         try {
-            Log.d("DeserializedData", "Loading chart: " + chartData); // Debug log
+            Log.d("DeserializedData", "Loading chart: " + chartData);
 
             JSONArray chartArray = new JSONArray(chartData);
 
-            // Add header row
             if (chartArray.length() > 0) {
                 JSONObject firstRow = chartArray.getJSONObject(0);
                 JSONArray weeks = firstRow.getJSONArray("weeks");
-                weekCount = weeks.length(); // Restore week count
+                weekCount = weeks.length();
                 addHeaderRow();
             }
 
-            // Add each task row
             for (int i = 0; i < chartArray.length(); i++) {
                 JSONObject rowData = chartArray.getJSONObject(i);
                 String taskName = rowData.getString("task");
@@ -241,19 +228,17 @@ public class ganttChart extends AppCompatActivity {
 
                 TableRow taskRow = new TableRow(this);
 
-                // Add task name
                 TextView taskCell = new TextView(this);
                 taskCell.setText(taskName);
                 taskCell.setPadding(16, 16, 16, 16);
                 taskCell.setBackgroundResource(R.drawable.cell_border);
                 taskRow.addView(taskCell);
 
-                // Add week cells
                 for (int j = 0; j < weeks.length(); j++) {
                     TextView weekCell = createClickableCell();
-                    if (weeks.getBoolean(j)) { // Restore selection state
+                    if (weeks.getBoolean(j)) {
                         weekCell.setSelected(true);
-                        weekCell.setBackgroundColor(Color.GREEN); // Restore highlight
+                        weekCell.setBackgroundColor(Color.GREEN);
                     }
                     taskRow.addView(weekCell);
                 }

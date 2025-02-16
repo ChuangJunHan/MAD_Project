@@ -36,7 +36,6 @@ public class membersAdapter extends RecyclerView.Adapter<membersAdapter.ViewHold
         String user = availableUsers.get(position);
         holder.memberName.setText(user);
 
-        // Handle checkbox state
         holder.checkBox.setOnCheckedChangeListener(null);
         holder.checkBox.setChecked(selectedMembers.contains(user));
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {

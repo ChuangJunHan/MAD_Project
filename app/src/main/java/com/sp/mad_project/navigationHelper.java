@@ -7,7 +7,6 @@ import android.widget.ImageButton;
 public class navigationHelper {
 
     public static void setupNavigationBar(Activity activity, String loggedInUser) {
-        // Navigation to Chat Groups
         ImageButton chatsButton = activity.findViewById(R.id.chatsButton);
         if (chatsButton != null) {
             chatsButton.setOnClickListener(v -> {
@@ -17,7 +16,6 @@ public class navigationHelper {
             });
         }
 
-        // Navigation to Task Groups
         ImageButton tasksButton = activity.findViewById(R.id.tasksButton);
         if (tasksButton != null) {
             tasksButton.setOnClickListener(v -> {
@@ -36,7 +34,6 @@ public class navigationHelper {
             });
         }
 
-        // Navigation to Gantt Groups
         ImageButton ganttButton = activity.findViewById(R.id.ganttButton);
         if (ganttButton != null) {
             ganttButton.setOnClickListener(v -> {
@@ -46,7 +43,6 @@ public class navigationHelper {
             });
         }
 
-        // Navigation to Notifications
         ImageButton notificationsButton = activity.findViewById(R.id.notificationsButton);
         if (notificationsButton != null) {
             notificationsButton.setOnClickListener(v -> {

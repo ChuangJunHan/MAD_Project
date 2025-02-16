@@ -34,7 +34,6 @@ public class drawingAdapter extends RecyclerView.Adapter<drawingAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Drawing drawing = drawings.get(position);
 
-        // Load drawing as bitmap
         Bitmap bitmap = BitmapFactory.decodeFile(drawing.getPath());
         holder.imageView.setImageBitmap(bitmap);
     }

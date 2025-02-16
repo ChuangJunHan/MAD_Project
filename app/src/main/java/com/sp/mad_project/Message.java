@@ -1,10 +1,10 @@
 package com.sp.mad_project;
 
 public class Message {
-    private String sender; // Who sent the message
-    private String content; // The actual content of the message
-    private String type; // "message" or "event"
-    private String date; // Date of the message/event
+    private String sender;
+    private String content;
+    private String type;
+    private String date;
 
     public Message(String sender, String content, String type, String date) {
         this.sender = sender;
@@ -13,7 +13,6 @@ public class Message {
         this.date = date;
     }
 
-    // Getters
     public String getSender() {
         return sender;
     }
@@ -30,7 +29,6 @@ public class Message {
         return date;
     }
 
-    // Setters (if needed)
     public void setSender(String sender) {
         this.sender = sender;
     }

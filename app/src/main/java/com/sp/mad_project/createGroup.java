@@ -27,7 +27,6 @@ public class createGroup extends AppCompatActivity {
 
         dbHelper = new databaseHelper(this);
 
-        // Get the logged-in user from the intent
         loggedInUser = getIntent().getStringExtra("loggedInUser");
 
         createGroupButton.setOnClickListener(v -> {
@@ -48,16 +47,13 @@ public class createGroup extends AppCompatActivity {
                 return;
             }
 
-            // Create the group in the database
             long groupId = dbHelper.addGroup(groupName, groupDescription, maxMembers);
 
             if (groupId != -1) {
-                // Automatically add the logged-in user to the group
                 boolean isUserAdded = dbHelper.addMemberToGroup(groupId, loggedInUser, true);
                 if (isUserAdded) {
                     Toast.makeText(this, "Group created successfully!", Toast.LENGTH_SHORT).show();
 
-                    // Redirect to inviteMembers page
                     Intent intent = new Intent(createGroup.this, chatDetails.class);
                     intent.putExtra("groupId", (int) groupId);
                     intent.putExtra("loggedInUser", loggedInUser);

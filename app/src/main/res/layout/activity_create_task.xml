@@ -11,8 +11,6 @@
         android:orientation="vertical"
         android:gravity="center_horizontal" >
 
-
-        <!-- Task Name Input -->
         <EditText
             android:id="@+id/taskNameInput"
             android:layout_width="match_parent"
@@ -25,7 +23,6 @@
             android:textSize="16sp"
             android:gravity="center"/>
 
-        <!-- Deadline Input -->
         <EditText
             android:id="@+id/deadlineInput"
             android:layout_width="match_parent"
@@ -40,7 +37,6 @@
             android:focusable="false"
             android:clickable="true"/>
 
-        <!-- Progress Section -->
         <TextView
             android:id="@+id/progressText"
             android:layout_width="wrap_content"
@@ -61,7 +57,6 @@
             android:enabled="true"
             android:layout_marginBottom="16dp"/>
 
-        <!-- To-Do List Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -114,7 +109,6 @@
                 android:background="@drawable/rounded_button"/>
         </LinearLayout>
 
-        <!-- Comments Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -167,7 +161,6 @@
                 android:background="@drawable/rounded_button"/>
         </LinearLayout>
 
-        <!-- Member Dropdown -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -194,7 +187,6 @@
 
         </LinearLayout>
 
-        <!-- Save Task Button -->
         <Button
             android:id="@+id/saveTaskButton"
             android:layout_width="match_parent"

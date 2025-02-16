@@ -20,12 +20,12 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_layout"
         android:padding="8dp"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/black" />
 
     <ImageView
         android:id="@+id/photoView"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
-        android:visibility="gone" /> <!-- Add the photoView -->
+        android:visibility="gone" />
 </LinearLayout>

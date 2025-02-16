@@ -1,7 +1,6 @@
 package com.sp.mad_project;
 
 import android.app.DatePickerDialog;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -12,30 +11,9 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.View;
 
-
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.os.Build;
-
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
-import android.Manifest;
-
-
 
 import java.util.ArrayList;
 
@@ -76,7 +54,6 @@ public class createTask extends AppCompatActivity {
         groupId = getIntent().getIntExtra("groupId", -1);
         loggedInUser = getIntent().getStringExtra("loggedInUser");
 
-        // Load project members and populate dropdown
         loadProjectMembers();
 
         if (!dbHelper.isGroupCreator(groupId, loggedInUser)) {
@@ -85,18 +62,6 @@ public class createTask extends AppCompatActivity {
             return;
         }
 
-        ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
-            @Override
-            public void onActivityResult(Boolean o) {
-                if (o) {
-                    Toast.makeText(createTask.this, "Post notification permission granted", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(createTask.this, "Post notification permission not granted", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        // Set up deadline picker
         deadlineInput.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
             DatePickerDialog datePickerDialog = new DatePickerDialog(this,
@@ -107,15 +72,12 @@ public class createTask extends AppCompatActivity {
             datePickerDialog.show();
         });
 
-        // Add To-Do button click listener
         Button addTodoButton = findViewById(R.id.addTodoButton);
         addTodoButton.setOnClickListener(v -> addTodoItem());
 
-        // Add Comment button click listener
         Button addCommentButton = findViewById(R.id.addCommentButton);
         addCommentButton.setOnClickListener(v -> addComment());
 
-        // Save Task button click listener
         Button saveTaskButton = findViewById(R.id.saveTaskButton);
         saveTaskButton.setOnClickListener(v -> saveTask());
     }
@@ -124,7 +86,6 @@ public class createTask extends AppCompatActivity {
 
 
     private void loadProjectMembers() {
-        // Fetch project members from the database
         projectMembers = dbHelper.getMembersByGroupId(groupId);
 
         if (projectMembers.isEmpty()) {
@@ -132,7 +93,6 @@ public class createTask extends AppCompatActivity {
             return;
         }
 
-        // Populate the Spinner with project members
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, projectMembers);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         memberDropdown.setAdapter(adapter);
@@ -143,14 +103,12 @@ public class createTask extends AppCompatActivity {
         if (!todoText.isEmpty()) {
             CheckBox todoCheckBox = new CheckBox(this);
             todoCheckBox.setText(todoText);
-
-            // Sync progress bar with checkbox state
             todoCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> updateProgressBar());
 
             todoContainer.addView(todoCheckBox);
             todoCheckBoxes.add(todoCheckBox);
-            todoInput.setText(""); // Clear input
-            updateProgressBar(); // Update progress when a new To-Do is added
+            todoInput.setText("");
+            updateProgressBar();
         }
     }
 
@@ -160,8 +118,8 @@ public class createTask extends AppCompatActivity {
             TextView commentView = new TextView(this);
             commentView.setText(commentText);
             commentContainer.addView(commentView);
-            commentList.add(commentText); // Add to list for saving
-            commentInput.setText(""); // Clear input
+            commentList.add(commentText);
+            commentInput.setText("");
         }
     }
 
@@ -183,32 +141,29 @@ public class createTask extends AppCompatActivity {
     private void saveTask() {
         String taskName = taskNameInput.getText().toString().trim();
         String deadline = deadlineInput.getText().toString().trim();
-        String assignedMember = (String) memberDropdown.getSelectedItem(); // Get selected member
-        int progress = progressSeekBar.getProgress(); // Get progress value
+        String assignedMember = (String) memberDropdown.getSelectedItem();
+        int progress = progressSeekBar.getProgress();
 
         if (taskName.isEmpty() || deadline.isEmpty()) {
             Toast.makeText(this, "Please fill all fields.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Save task in the database
         long taskId = dbHelper.addTaskToProject(groupId, taskName, deadline, assignedMember, progress);
         if (taskId != -1) {
-            // Save todos
             for (CheckBox checkBox : todoCheckBoxes) {
                 String todoText = checkBox.getText().toString();
                 boolean completed = checkBox.isChecked();
                 dbHelper.addTodoToTask(taskId, todoText, completed);
             }
 
-            // Save comments
             for (String comment : commentList) {
                 dbHelper.addCommentToTask(taskId, comment);
             }
 
             Toast.makeText(this, "Task created successfully!", Toast.LENGTH_SHORT).show();
-            setResult(RESULT_OK); // Notify calling activity of success
-            finish(); // Close the activity
+            setResult(RESULT_OK);
+            finish();
         } else {
             Toast.makeText(this, "Failed to create task.", Toast.LENGTH_SHORT).show();
         }

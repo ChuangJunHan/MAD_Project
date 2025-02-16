@@ -34,7 +34,6 @@ public class inviteMembers extends AppCompatActivity {
 
         dbHelper = new databaseHelper(this);
 
-        // Get group details from the intent
         groupId = getIntent().getIntExtra("groupId", -1);
         loggedInUser = getIntent().getStringExtra("loggedInUser");
 
@@ -44,7 +43,6 @@ public class inviteMembers extends AppCompatActivity {
             return;
         }
 
-        // Fetch available users (excluding already added members)
         availableUsers = dbHelper.getAllUsersNotInGroup(groupId);
         Log.d("InviteMembers", "Group ID: " + groupId);
         Log.d("InviteMembers", "Available Users: " + availableUsers);
@@ -73,11 +71,9 @@ public class inviteMembers extends AppCompatActivity {
                 return;
             }
 
-            // Add selected members to the group
             dbHelper.addMembersToGroup(groupId, selectedMembers);
             Toast.makeText(this, "Members invited successfully!", Toast.LENGTH_SHORT).show();
 
-            // Redirect back to chatDetails
             Intent intent = new Intent(inviteMembers.this, chatDetails.class);
             intent.putExtra("groupId", groupId);
             intent.putExtra("loggedInUser", loggedInUser);

@@ -9,7 +9,6 @@
     android:elevation="6dp"
     android:clipToOutline="true">
 
-    <!-- Group Name -->
     <TextView
         android:id="@+id/notificationTitle"
         android:layout_width="match_parent"
@@ -20,7 +19,6 @@
         android:textSize="22sp"
         android:textStyle="bold"/>
 
-    <!-- Event Count or Task Count -->
     <TextView
         android:id="@+id/notificationDate"
         android:layout_width="match_parent"

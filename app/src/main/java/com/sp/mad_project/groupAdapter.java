@@ -16,7 +16,7 @@ import java.util.List;
 public class groupAdapter extends RecyclerView.Adapter<groupAdapter.GroupViewHolder> {
     private Context context;
     private List<Group> groupList;
-    private boolean isChatGroup; // Flag to differentiate between chat and task groups
+    private boolean isChatGroup;
     private String loggedInUser, contextType;
 
     public groupAdapter(Context context, List<Group> groupList, boolean isChatGroup, String loggedInUser, String contextType) {
@@ -39,26 +39,23 @@ public class groupAdapter extends RecyclerView.Adapter<groupAdapter.GroupViewHol
 
         holder.groupName.setText(group.getName());
 
-        // Update infoText dynamically for ganttGroups
         if ("ganttGroups".equals(contextType)) {
-            if (group.getTaskCount() > 0) { // Assuming taskCount represents ganttCount for ganttGroups
+            if (group.getTaskCount() > 0) {
                 holder.groupInfo.setText("Gantt Chart Present: Yes");
                 holder.viewDetailsButton.setEnabled(true);
-                holder.viewDetailsButton.setAlpha(1.0f); // Fully visible when enabled
+                holder.viewDetailsButton.setAlpha(1.0f);
             } else {
                 holder.groupInfo.setText("Gantt Chart Present: No");
                 holder.viewDetailsButton.setEnabled(false);
-                holder.viewDetailsButton.setAlpha(0.5f); // Dim button to indicate it's disabled
+                holder.viewDetailsButton.setAlpha(0.5f);
             }
         } else {
-            // For chatGroups or taskGroups
             String infoText = isChatGroup ?
                     "Number of Events: " + group.getEventCount() :
                     "Number of Tasks: " + group.getTaskCount();
             holder.groupInfo.setText(infoText);
         }
 
-        // Set button text based on context type
         if ("chatGroups".equals(contextType)) {
             holder.viewDetailsButton.setText("View Messages");
         } else if ("taskGroups".equals(contextType)) {
@@ -67,7 +64,6 @@ public class groupAdapter extends RecyclerView.Adapter<groupAdapter.GroupViewHol
             holder.viewDetailsButton.setText("View Chart");
         }
 
-        // View Details Button Click Listener
         holder.viewDetailsButton.setOnClickListener(v -> {
             if ("chatGroups".equals(contextType)) {
                 Intent intent = new Intent(v.getContext(), chatMessages.class);
@@ -80,7 +76,7 @@ public class groupAdapter extends RecyclerView.Adapter<groupAdapter.GroupViewHol
                 intent.putExtra("loggedInUser", loggedInUser);
                 v.getContext().startActivity(intent);
             } else if ("ganttGroups".equals(contextType)) {
-                if (group.getTaskCount() > 0) { // Only start activity if a Gantt chart exists
+                if (group.getTaskCount() > 0) {
                     Intent intent = new Intent(v.getContext(), ganttChart.class);
                     intent.putExtra("groupId", group.getId());
                     intent.putExtra("loggedInUser", loggedInUser);

@@ -19,7 +19,6 @@ public class addGroup extends AppCompatActivity {
         createGroupButton = findViewById(R.id.createGroupButton);
         joinGroupButton = findViewById(R.id.joinGroupButton);
 
-        // Get the logged-in user from the intent
         loggedInUser = getIntent().getStringExtra("loggedInUser");
 
         createGroupButton.setOnClickListener(v -> {
@@ -29,7 +28,7 @@ public class addGroup extends AppCompatActivity {
         });
 
         joinGroupButton.setOnClickListener(v -> {
-            Intent intent = new Intent(addGroup.this, joinGroup.class);
+            Intent intent = new Intent(addGroup.this, joinWithKey.class);
             intent.putExtra("loggedInUser", loggedInUser); // Pass loggedInUser
             startActivity(intent);
         });

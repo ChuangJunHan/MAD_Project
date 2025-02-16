@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="@drawable/background_gradient">
 
-    <!-- Welcome Banner -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,7 +59,7 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <!-- Logout Button -->
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -78,25 +77,23 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <!-- Spacer to push navigation bar to the bottom -->
-
-    <!-- Navigation Bar -->
-
     <LinearLayout
         android:id="@+id/navigationBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#F5F5F5"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:background="#F5F5F5"
+        android:padding="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Chat Groups Icon -->
         <ImageButton
             android:id="@+id/chatsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:padding="8dp"
+            android:background="@android:color/transparent"
             android:src="@drawable/ic_chat" />
 
         <Space
@@ -104,13 +101,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <!-- Task Groups Icon -->
         <ImageButton
             android:id="@+id/tasksButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:padding="8dp"
+            android:background="@android:color/transparent"
             android:src="@drawable/ic_task" />
 
         <Space
@@ -118,7 +114,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <!-- Home Icon -->
         <ImageButton
             android:id="@+id/homeButton"
             android:layout_width="wrap_content"
@@ -132,13 +127,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <!-- Gantt Icon -->
         <ImageButton
             android:id="@+id/ganttButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:padding="8dp"
+            android:background="@android:color/transparent"
             android:src="@drawable/ic_gantt" />
 
         <Space
@@ -146,13 +140,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <!-- Notifications Icon -->
         <ImageButton
             android:id="@+id/notificationsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:padding="8dp"
+            android:background="@android:color/transparent"
             android:src="@drawable/ic_notifications" />
     </LinearLayout>
 </LinearLayout>

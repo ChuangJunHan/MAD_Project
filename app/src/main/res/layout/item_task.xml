@@ -12,7 +12,7 @@
     android:layout_margin="12dp"
     android:translationZ="4dp"
     android:shadowColor="@android:color/darker_gray">
-    <!-- Task Name -->
+
     <TextView
         android:id="@+id/taskName"
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
         android:textSize="22sp"
         android:textStyle="bold"
         android:fontFamily="sans-serif-medium" />
-    <!-- Deadline -->
+
     <TextView
         android:id="@+id/taskDeadline"
         android:layout_width="match_parent"

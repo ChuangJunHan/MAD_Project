@@ -30,7 +30,6 @@ public class whiteboard extends AppCompatActivity {
 
         dbHelper = new databaseHelper(this);
 
-        // Get the groupId from the intent
         groupId = getIntent().getIntExtra("groupId", -1);
         if (groupId == -1) {
             Toast.makeText(this, "Group not specified", Toast.LENGTH_SHORT).show();
@@ -54,20 +53,16 @@ public class whiteboard extends AppCompatActivity {
     }
 
     private String saveDrawing(int groupId) throws IOException {
-        // Convert the drawing to a bitmap
         Bitmap bitmap = drawingView.getBitmap();
 
-        // Create a directory for the group if it doesn't exist
         File groupDir = new File(getExternalFilesDir(null), "group_" + groupId);
         if (!groupDir.exists()) groupDir.mkdirs();
 
-        // Save the bitmap to a file
         File file = new File(groupDir, "drawing_" + System.currentTimeMillis() + ".png");
         try (FileOutputStream out = new FileOutputStream(file)) {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
         }
 
-        // Save the drawing details in the database
         dbHelper.addDrawingToGroup(groupId, file.getAbsolutePath());
         return file.getAbsolutePath();
     }

@@ -45,7 +45,6 @@ public class chatDetails extends AppCompatActivity {
 
         membersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Get group details and navigation info from the intent
         groupId = getIntent().getIntExtra("groupId", -1);
         loggedInUser = getIntent().getStringExtra("loggedInUser");
 
@@ -55,19 +54,15 @@ public class chatDetails extends AppCompatActivity {
             return;
         }
 
-        // Retrieve group details
         String groupName = dbHelper.getGroupNameById(groupId);
         groupNameText.setText(groupName);
         groupDescriptionText.setText(dbHelper.getGroupDescriptionById(groupId));
 
-        // Retrieve and display the group key
         String groupKey = dbHelper.getGroupKeyById(groupId);
         groupKeyText.setText("Group Key: " + groupKey);
 
-        // Retrieve and display group members
         loadGroupMembers();
 
-        // Invite Members Button
         inviteMembersButton.setOnClickListener(v -> {
             Intent intent = new Intent(chatDetails.this, inviteMembers.class);
             intent.putExtra("groupId", groupId);
@@ -75,7 +70,6 @@ public class chatDetails extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Invite Members Button
         ganttChartButton.setOnClickListener(v -> {
             Intent intent = new Intent(chatDetails.this, ganttChart.class);
             intent.putExtra("groupId", groupId);
@@ -83,7 +77,6 @@ public class chatDetails extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Invite Members Button
         viewTasksButton.setOnClickListener(v -> {
             Intent intent = new Intent(chatDetails.this, taskView.class);
             intent.putExtra("groupId", groupId);
@@ -107,14 +100,12 @@ public class chatDetails extends AppCompatActivity {
     }
 
     private void loadGroupMembers() {
-        // Retrieve and display group members
         members = dbHelper.getMembersByGroupId(groupId);
 
         if (members.isEmpty()) {
             Toast.makeText(this, "No members found in this group.", Toast.LENGTH_SHORT).show();
         }
 
-        // Set up adapter and assign it to the RecyclerView
         if (adapter == null) {
             adapter = new membersAdapter(this, members, new ArrayList<>());
             membersRecyclerView.setAdapter(adapter);

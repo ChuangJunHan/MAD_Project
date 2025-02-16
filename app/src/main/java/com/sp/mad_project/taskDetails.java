@@ -30,14 +30,13 @@ public class taskDetails extends AppCompatActivity {
 
     private List<CheckBox> todoCheckBoxes = new ArrayList<>();
     private List<String> commentList = new ArrayList<>();
-    private List<String> projectMembers = new ArrayList<>(); // Holds project members
+    private List<String> projectMembers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
 
-        // Initialize inputs
         taskNameInput = findViewById(R.id.taskNameInput);
         deadlineInput = findViewById(R.id.deadlineInput);
         memberDropdown = findViewById(R.id.memberDropdown);
@@ -48,19 +47,15 @@ public class taskDetails extends AppCompatActivity {
         commentContainer = findViewById(R.id.commentsContainer);
         commentInput = findViewById(R.id.commentInput);
 
-        // Database setup
         dbHelper = new databaseHelper(this);
         taskId = getIntent().getIntExtra("taskId", -1);
         groupId = getIntent().getIntExtra("groupId", -1);
         loggedInUser = getIntent().getStringExtra("loggedInUser");
 
-        // Load project members and populate dropdown
         loadProjectMembers();
 
-        // Load task details
         loadTaskDetails();
 
-        // Set up deadline picker
         deadlineInput.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
             DatePickerDialog datePickerDialog = new DatePickerDialog(this,
@@ -71,22 +66,18 @@ public class taskDetails extends AppCompatActivity {
             datePickerDialog.show();
         });
 
-        // Add To-Do button click listener
         Button addTodoButton = findViewById(R.id.addTodoButton);
         addTodoButton.setOnClickListener(v -> addTodoItem());
 
-        // Add Comment button click listener
         Button addCommentButton = findViewById(R.id.addCommentButton);
         addCommentButton.setOnClickListener(v -> addComment());
 
-        // Update Task button click listener
         Button updateTaskButton = findViewById(R.id.saveTaskButton);
         updateTaskButton.setText("Update Task");
         updateTaskButton.setOnClickListener(v -> updateTask());
     }
 
     private void loadProjectMembers() {
-        // Fetch project members from the database
         projectMembers = dbHelper.getMembersByGroupId(groupId);
 
         if (projectMembers.isEmpty()) {
@@ -94,7 +85,6 @@ public class taskDetails extends AppCompatActivity {
             return;
         }
 
-        // Populate the Spinner with project members
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, projectMembers);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         memberDropdown.setAdapter(adapter);
@@ -103,31 +93,26 @@ public class taskDetails extends AppCompatActivity {
     private void loadTaskDetails() {
         Task task = dbHelper.getTaskById(taskId);
         if (task != null) {
-            // Populate fields with existing data
             taskNameInput.setText(task.getName());
             deadlineInput.setText(task.getDeadline());
             progressSeekBar.setProgress(task.getProgress());
             progressView.setText("Progress: " + task.getProgress() + "%");
 
-            // Pre-select the assigned member
             if (projectMembers.contains(task.getAssignedMember())) {
                 memberDropdown.setSelection(projectMembers.indexOf(task.getAssignedMember()));
             }
 
-            // Load existing To-Dos
             List<String> todos = dbHelper.getTodosByTask(taskId);
             for (String todo : todos) {
                 CheckBox todoCheckBox = new CheckBox(this);
                 todoCheckBox.setText(todo);
 
-                // Sync progress bar with checkbox state
                 todoCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> updateProgressBar());
 
                 todoContainer.addView(todoCheckBox);
                 todoCheckBoxes.add(todoCheckBox);
             }
 
-            // Load existing Comments
             List<String> comments = dbHelper.getCommentsByTask(taskId);
             for (String comment : comments) {
                 TextView commentView = new TextView(this);
@@ -147,13 +132,12 @@ public class taskDetails extends AppCompatActivity {
             CheckBox todoCheckBox = new CheckBox(this);
             todoCheckBox.setText(todoText);
 
-            // Sync progress bar with checkbox state
             todoCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> updateProgressBar());
 
             todoContainer.addView(todoCheckBox);
             todoCheckBoxes.add(todoCheckBox);
-            todoInput.setText(""); // Clear input
-            updateProgressBar(); // Update progress when a new To-Do is added
+            todoInput.setText("");
+            updateProgressBar();
         }
     }
 
@@ -163,8 +147,8 @@ public class taskDetails extends AppCompatActivity {
             TextView commentView = new TextView(this);
             commentView.setText(commentText);
             commentContainer.addView(commentView);
-            commentList.add(commentText); // Add to list for saving
-            commentInput.setText(""); // Clear input
+            commentList.add(commentText);
+            commentInput.setText("");
         }
     }
 
@@ -186,7 +170,7 @@ public class taskDetails extends AppCompatActivity {
     private void updateTask() {
         String taskName = taskNameInput.getText().toString().trim();
         String deadline = deadlineInput.getText().toString().trim();
-        String assignedMember = (String) memberDropdown.getSelectedItem(); // Get selected member
+        String assignedMember = (String) memberDropdown.getSelectedItem();
         int progress = progressSeekBar.getProgress();
 
         if (taskName.isEmpty() || deadline.isEmpty()) {
@@ -194,19 +178,16 @@ public class taskDetails extends AppCompatActivity {
             return;
         }
 
-        // Update task in the database
         boolean isUpdated = dbHelper.updateTask(taskId, taskName, deadline, assignedMember, progress);
         if (isUpdated) {
-            // Update todos
-            dbHelper.deleteTodosByTask(taskId); // Clear existing todos
+            dbHelper.deleteTodosByTask(taskId);
             for (CheckBox checkBox : todoCheckBoxes) {
                 String todoText = checkBox.getText().toString();
                 boolean completed = checkBox.isChecked();
                 dbHelper.addTodoToTask(taskId, todoText, completed);
             }
 
-            // Update comments
-            dbHelper.deleteCommentsByTask(taskId); // Clear existing comments
+            dbHelper.deleteCommentsByTask(taskId);
             for (String comment : commentList) {
                 dbHelper.addCommentToTask(taskId, comment);
             }

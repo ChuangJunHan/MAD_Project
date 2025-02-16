@@ -39,7 +39,6 @@ public class taskView extends AppCompatActivity {
         groupNameTextView = findViewById(R.id.groupName);
         addTaskButton = findViewById(R.id.addTaskButton);
 
-        // Get group ID
         groupId = getIntent().getIntExtra("groupId", -1);
         loggedInUser = getIntent().getStringExtra("loggedInUser");
 
@@ -52,12 +51,10 @@ public class taskView extends AppCompatActivity {
             return;
         }
 
-        // Load tasks for the selected group
         loadTasks();
 
         navigationHelper.setupNavigationBar(this, loggedInUser);
 
-        // Add Task button click listener
         addTaskButton.setOnClickListener(v -> {
             Intent intent = new Intent(taskView.this, createTask.class);
             intent.putExtra("groupId", groupId);
@@ -73,7 +70,6 @@ public class taskView extends AppCompatActivity {
         });
     }
 
-    // Load tasks from the database
     private void loadTasks() {
         taskList = dbHelper.getTasksByGroupId(groupId);
         adapter = new taskAdapter(taskList, loggedInUser, dbHelper);
@@ -85,7 +81,6 @@ public class taskView extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CREATE_TASK_REQUEST && resultCode == RESULT_OK) {
-            // Reload the task list when returning from createTask activity
             loadTasks();
             adapter.notifyDataSetChanged();
         }

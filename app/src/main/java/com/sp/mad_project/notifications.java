@@ -35,21 +35,17 @@ public class notifications extends AppCompatActivity {
             return;
         }
 
-        // Initialize the notification list
         notificationList = new ArrayList<>();
 
-        // Load notifications
         loadNotifications();
 
         navigationHelper.setupNavigationBar(this, loggedInUser);
 
-        // Set up the adapter
         adapter = new notificationAdapter(this, notificationList);
         notificationsRecyclerView.setAdapter(adapter);
     }
 
     private void loadNotifications() {
-        // Fetch tasks assigned to the logged-in user
         List<Task> tasks = dbHelper.getTasksForUser(loggedInUser);
         if (tasks.isEmpty()) {
             Toast.makeText(this, "No tasks found.", Toast.LENGTH_SHORT).show();
@@ -57,7 +53,6 @@ public class notifications extends AppCompatActivity {
             notificationList.addAll(tasks);
         }
 
-        // Fetch events for the groups the user is part of
         List<Message> events = dbHelper.getEventsForUserGroups(loggedInUser);
         if (events.isEmpty()) {
             Toast.makeText(this, "No events found.", Toast.LENGTH_SHORT).show();

@@ -10,27 +10,24 @@ import androidx.appcompat.app.AppCompatActivity;
 public class splashScreen extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
-    private float volume = 1.0f; // Full volume
+    private float volume = 1.0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        // Initialize and start the music
         mediaPlayer = MediaPlayer.create(this, R.raw.splash_music);
         mediaPlayer.setVolume(volume, volume);
         mediaPlayer.start();
 
-        // Schedule the fade-out and transition after 4 seconds
         new Handler().postDelayed(() -> fadeOutMusicAndTransition(), 1500);
     }
 
     private void fadeOutMusicAndTransition() {
-        // Gradually reduce the volume of the music
         final Handler fadeHandler = new Handler();
-        final int fadeDuration = 500; // 2 seconds for the fade-out
-        final int fadeStep = 100; // Step interval in milliseconds
+        final int fadeDuration = 500;
+        final int fadeStep = 100;
         final float fadeStepVolume = volume / (fadeDuration / fadeStep);
 
         fadeHandler.postDelayed(new Runnable() {

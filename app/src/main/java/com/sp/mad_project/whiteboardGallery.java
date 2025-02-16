@@ -54,10 +54,8 @@ public class whiteboardGallery extends AppCompatActivity {
     }
 
     private void loadDrawings() {
-        // Load drawings for the specific group
         drawings = dbHelper.getDrawingsForGroup(groupId);
 
-        // Set up the RecyclerView
         adapter = new drawingAdapter(this, drawings);
         drawingsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // Display as a grid
         drawingsRecyclerView.setAdapter(adapter);
@@ -68,7 +66,6 @@ public class whiteboardGallery extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == WHITEBOARD_REQUEST_CODE && resultCode == RESULT_OK) {
-            // Reload drawings after adding a new one
             loadDrawings();
         }
     }
